@@ -2,6 +2,7 @@ package io.github.miroslavpokorny.blog;
 
 import com.google.gson.Gson;
 import io.github.miroslavpokorny.blog.model.Article;
+import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.dao.*;
 import io.github.miroslavpokorny.blog.model.helper.GsonHelper;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
@@ -27,6 +28,13 @@ public class HelloController {
         IArticleDao articleDao = new ArticleDao();
         IArticleRatingDao articleRating = new ArticleRatingDao();
         ICategoryDao categoryDao = new CategoryDao();
+
+        User user1 = userDao.getByNickname("unknown");
+        User user2 = userDao.getByEmail("administrator@example.com");
+
+        System.out.println(user1);
+        System.out.println(user2);
+
         PaginationHelper<Article> page1 = articleDao.getArticlesSearch(1, 3 , "TEST");
         PaginationHelper<Article> page2 = articleDao.getArticlesSearch(2, 3 , "TEST");
         PaginationHelper<Article> page3 = articleDao.getArticlesSearch(3, 3 , "TEST---");
