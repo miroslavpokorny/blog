@@ -11,10 +11,10 @@
         <property name="previewImage" column="PreviewImage" />
         <property name="content" column="Content" />
         <many-to-one name="author" column="Author" class="io.github.miroslavpokorny.blog.model.User" foreign-key="Id"/>
-        <property name="PublishDate" column="PublishDate" />
-        <property name="EditDate" column="EditDate" />
-        <many-to-one name="Category" column="Category" class="io.github.miroslavpokorny.blog.model.Category" foreign-key="Id"/>
+        <property name="publishDate" column="PublishDate" />
+        <property name="editDate" column="EditDate" />
+        <many-to-one name="category" column="Category" class="io.github.miroslavpokorny.blog.model.Category" foreign-key="Id"/>
         <property name="visible" column="Visible" />
-        <many-to-one name="Gallery" column="Gallery" class="io.github.miroslavpokorny.blog.model.Gallery" foreign-key="Id"/>
+        <many-to-one name="gallery" column="Gallery" class="io.github.miroslavpokorny.blog.model.Gallery" foreign-key="Id"/>
     </class>
 </hibernate-mapping>

@@ -3,7 +3,7 @@ package io.github.miroslavpokorny.blog.model.helper;
 import java.util.List;
 
 public class PaginationHelper <T> {
-    private int total;
+    private long total;
 
     private int page;
 
@@ -11,11 +11,11 @@ public class PaginationHelper <T> {
 
     private List<T> items;
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 
