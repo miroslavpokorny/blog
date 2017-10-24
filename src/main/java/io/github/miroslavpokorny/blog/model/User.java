@@ -1,51 +1,135 @@
 package io.github.miroslavpokorny.blog.model;
 
-//TODO add nullable and foreign keys
-
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "User")
 public class User {
-    @Id
-    @GeneratedValue
-    @Column(name = "Id", columnDefinition = "INT")
     private int id;
 
-    @Column(name = "Name", columnDefinition = "VARCHAR(55)")
     private String name;
 
-    @Column(name = "Surname", columnDefinition = "VARCHAR(55)")
     private String surname;
 
-    @Column(name = "Email", columnDefinition = "VARCHAR(255)")
     private String email;
 
-    @Column(name = "Password", columnDefinition = "VARCHAR(255)")
     private String password;
 
-    @Column(name = "Nickname", columnDefinition = "VARCHAR(55)")
     private String nickname;
 
-    @Column(name = "LastSignInDate", columnDefinition = "DATETIME")
     private Date lastSignInDate;
 
-    @Column(name = "Role", columnDefinition = "INT")
     private UserRole role;
 
-    @Column(name = "Enabled", columnDefinition = "BIT(1)")
     private boolean enabled;
 
-    @Column(name = "Avatar", columnDefinition = "VARCHAR(255)")
     private String avatar;
 
-    @Column(name = "RestorePasswordKey", columnDefinition = "VARCHAR(255)")
     private String restorePasswordKey;
 
-    @Column(name = "ActivationEmailKey", columnDefinition = "VARCHAR(255)")
     private String activationEmailKey;
 
-    @Column(name = "Activated", columnDefinition = "BIT(1)")
     private boolean activated;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Date getLastSignInDate() {
+        return lastSignInDate;
+    }
+
+    public void setLastSignInDate(Date lastSignInDate) {
+        this.lastSignInDate = lastSignInDate;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getRestorePasswordKey() {
+        return restorePasswordKey;
+    }
+
+    public void setRestorePasswordKey(String restorePasswordKey) {
+        this.restorePasswordKey = restorePasswordKey;
+    }
+
+    public String getActivationEmailKey() {
+        return activationEmailKey;
+    }
+
+    public void setActivationEmailKey(String activationEmailKey) {
+        this.activationEmailKey = activationEmailKey;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 }

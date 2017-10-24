@@ -1,0 +1,21 @@
+<?xml version="1.0"?><!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="io.github.miroslavpokorny.blog.model.Comment" table="[Comment]">
+        <id name="id" column="Id">
+            <generator class="native" />
+        </id>
+        <many-to-one name="article" column="[Article]" class="io.github.miroslavpokorny.blog.model.Article" foreign-key="Id"/>
+        <many-to-one name="parentComment" column="[ParentComment]" class="io.github.miroslavpokorny.blog.model.Comment" foreign-key="Id"/>
+        <bag name="subComments">
+            <key column="[ParentComment]" />
+            <one-to-many class="io.github.miroslavpokorny.blog.model.Comment" />
+        </bag>
+        <many-to-one name="author" column="[Author]" class="io.github.miroslavpokorny.blog.model.User" foreign-key="Id"/>
+        <property name="publishDate" column="PublishDate" />
+        <property name="content" column="Content" />
+        <property name="visible" column="Visible" />
+    </class>
+</hibernate-mapping>

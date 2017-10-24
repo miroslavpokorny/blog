@@ -1,0 +1,14 @@
+<?xml version="1.0"?><!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="io.github.miroslavpokorny.blog.model.UserQuestion" table="[UserQuestion]">
+        <id name="id" column="Id">
+            <generator class="native" />
+        </id>
+        <many-to-one name="user" column="[User]" class="io.github.miroslavpokorny.blog.model.User" foreign-key="Id"/>
+        <property name="question" column="Question"/>
+        <property name="answer" column="Answer"/>
+    </class>
+</hibernate-mapping>

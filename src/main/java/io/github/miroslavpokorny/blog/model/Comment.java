@@ -1,34 +1,86 @@
 package io.github.miroslavpokorny.blog.model;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-//TODO add nullable and foreign keys
-
-@Entity
-@Table(name = "Comment")
 public class Comment {
-    @Id
-    @GeneratedValue
-    @Column(name = "Id", columnDefinition = "INT")
     private int id;
 
-    @Column(name = "Article", columnDefinition = "INT")
     private Article article;
 
-    @Column(name = "ParentComment", columnDefinition = "INT")
     private Comment parentComment;
 
-    @Column(name = "Author", columnDefinition = "INT")
     private User author;
 
-    @Column(name = "PublishDate", columnDefinition = "DATETIME")
     private Date publishDate;
 
-    @Column(name = "Content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "Visible", columnDefinition = "BIT(1)")
     private boolean visible;
 
+    private List<Comment> subComments;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public List<Comment> getSubComments() {
+        return subComments;
+    }
+
+    public void setSubComments(List<Comment> subComments) {
+        this.subComments = subComments;
+    }
 }

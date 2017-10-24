@@ -1,23 +1,43 @@
 package io.github.miroslavpokorny.blog.model;
 
-//TODO add nullable and foreign keys
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "GalleryItem")
 public class GalleryItem {
-    @Id
-    @GeneratedValue
-    @Column(name = "Id", columnDefinition = "INT")
     private int id;
 
-    @Column(name = "ImageName", columnDefinition = "VARCHAR(55)")
     private String imageName;
 
-    @Column(name = "Title", columnDefinition = "VARCHAR(255)")
     private String title;
 
-    @Column(name = "Gallery", columnDefinition = "INT")
     private Gallery gallery;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Gallery getGallery() {
+        return gallery;
+    }
+
+    public void setGallery(Gallery gallery) {
+        this.gallery = gallery;
+    }
 }

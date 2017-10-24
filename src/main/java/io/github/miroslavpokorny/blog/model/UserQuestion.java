@@ -1,23 +1,43 @@
 package io.github.miroslavpokorny.blog.model;
 
-//TODO add nullable and foreign keys
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "UserRole")
 public class UserQuestion {
-    @Id
-    @GeneratedValue
-    @Column(name = "Id", columnDefinition = "INT")
     private int id;
 
-    @Column(name = "User", columnDefinition = "INT")
     private User user;
 
-    @Column(name = "Question", columnDefinition = "VARCHAR(255)")
     private String question;
 
-    @Column(name = "Answer", columnDefinition = "VARCHAR(255)")
     private String answer;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
 }

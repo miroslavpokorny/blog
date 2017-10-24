@@ -1,0 +1,23 @@
+<?xml version="1.0"?><!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="io.github.miroslavpokorny.blog.model.User" table="[User]">
+        <id name="Id" column="Id">
+            <generator class="native" />
+        </id>
+        <property name="name" column="Name"/>
+        <property name="surname" column="Surname" />
+        <property name="email" column="Email" />
+        <property name="password" column="[Password]" />
+        <property name="nickname" column="Nickname" />
+        <property name="lastSignInDate" column="LastSignInDate" />
+        <many-to-one name="role" column="[Role]" class="io.github.miroslavpokorny.blog.model.UserRole" foreign-key="Id"/>
+        <property name="enabled" column="[Enabled]" />
+        <property name="avatar" column="Avatar" />
+        <property name="restorePasswordKey" column="RestorePasswordKey" />
+        <property name="activationEmailKey" column="ActivationEmailKey" />
+        <property name="activated" column="Activated" />
+    </class>
+</hibernate-mapping>

@@ -1,22 +1,43 @@
 package io.github.miroslavpokorny.blog.model;
 
-import javax.persistence.*;
-
-//TODO add nullable and foreign keys
-@Entity
-@Table(name = "ArticleRating")
 public class ArticleRating {
-    @Id
-    @GeneratedValue
-    @Column(name = "Id", columnDefinition = "INT")
     private int id;
 
-    @Column(name = "Article", columnDefinition = "INT")
     private Article article;
 
-    @Column(name = "User", columnDefinition = "INT")
     private User user;
 
-    @Column(name = "Rating", columnDefinition = "FLOAT")
     private float rating;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 }
