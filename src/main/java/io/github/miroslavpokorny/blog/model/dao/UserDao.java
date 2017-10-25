@@ -4,12 +4,14 @@ import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import io.github.miroslavpokorny.blog.model.User;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
+@Service
 public class UserDao extends DaoBase<User> implements IUserDao {
     public UserDao() {
         super();

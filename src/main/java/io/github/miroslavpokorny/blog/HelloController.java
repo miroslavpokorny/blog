@@ -6,6 +6,7 @@ import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.dao.*;
 import io.github.miroslavpokorny.blog.model.helper.GsonHelper;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class HelloController {
 
     //TODO delete action
 
+    @Autowired
+    private IArticleRatingDao articleRatingDao;
+    
     @RequestMapping(value = "/temp", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String tempAction() {
@@ -26,7 +30,7 @@ public class HelloController {
 
         IUserDao userDao = new UserDao();
         IArticleDao articleDao = new ArticleDao();
-        IArticleRatingDao articleRatingDao = new ArticleRatingDao();
+
         ICategoryDao categoryDao = new CategoryDao();
 
         User user1 = userDao.getByNickname("unknown");

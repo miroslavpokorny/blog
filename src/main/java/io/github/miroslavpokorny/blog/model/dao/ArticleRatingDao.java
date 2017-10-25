@@ -6,13 +6,25 @@ import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.util.List;
 
+@Service
 public class ArticleRatingDao extends DaoBase<ArticleRating> implements IArticleRatingDao {
 
-//    public List<Object[]> getAvgRatingForArticles(List<Integer> articleIds) {
+    private final IUserDao userDao;
+
+    private final IArticleDao articleDao;
+
+    @Autowired
+    public ArticleRatingDao(IUserDao userDao, IArticleDao articleDao) {
+        this.userDao = userDao;
+        this.articleDao = articleDao;
+    }
+    //    public List<Object[]> getAvgRatingForArticles(List<Integer> articleIds) {
 //        try (CloseableSession session = HibernateHelper.getSession()) {
 //
 //                    //TODO Write this query
@@ -28,9 +40,8 @@ public class ArticleRatingDao extends DaoBase<ArticleRating> implements IArticle
             Root<ArticleRating> from = criteriaQuery.from(ArticleRating.class);
             criteriaQuery.where(criteriaBuilder.equal(from.get("article"), articleExpression));
             criteriaQuery.select(criteriaBuilder.avg(from.get("rating")));
-            ArticleDao ad = new ArticleDao();
             Query<Double> query = session.delegate().createQuery(criteriaQuery);
-            query.setParameter(articleExpression, ad.loadById(id));
+            query.setParameter(articleExpression, articleDao.loadById(id));
             return query.getSingleResult().floatValue();
         }
     }
@@ -49,11 +60,9 @@ public class ArticleRatingDao extends DaoBase<ArticleRating> implements IArticle
                             criteriaBuilder.equal(from.get("user"), userExpression)
                     )
             );
-            ArticleDao ad = new ArticleDao();
-            UserDao ud = new UserDao();
             Query<ArticleRating> query = session.delegate().createQuery(criteriaQuery);
-            query.setParameter(articleExpression, ad.loadById(articleId));
-            query.setParameter(userExpression, ud.loadById(userId));
+            query.setParameter(articleExpression, articleDao.loadById(articleId));
+            query.setParameter(userExpression, userDao.loadById(userId));
             return query.getSingleResult();
         }
     }
