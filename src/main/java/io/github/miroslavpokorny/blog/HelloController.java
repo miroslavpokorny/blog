@@ -26,7 +26,7 @@ public class HelloController {
 
         IUserDao userDao = new UserDao();
         IArticleDao articleDao = new ArticleDao();
-        IArticleRatingDao articleRating = new ArticleRatingDao();
+        IArticleRatingDao articleRatingDao = new ArticleRatingDao();
         ICategoryDao categoryDao = new CategoryDao();
 
         User user1 = userDao.getByNickname("unknown");
@@ -35,6 +35,8 @@ public class HelloController {
         System.out.println(user1);
         System.out.println(user2);
 
+        float rating = articleRatingDao.getAvgRatingForArticleById(1);
+        System.out.println(rating);
         PaginationHelper<Article> page1 = articleDao.getArticlesSearch(1, 3 , "TEST");
         PaginationHelper<Article> page2 = articleDao.getArticlesSearch(2, 3 , "TEST");
         PaginationHelper<Article> page3 = articleDao.getArticlesSearch(3, 3 , "TEST---");
