@@ -1,22 +1,18 @@
 package io.github.miroslavpokorny.blog.model.dao;
 
+import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
-import io.github.miroslavpokorny.blog.model.User;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
-@Service
+@Repository
 public class UserDao extends DaoBase<User> implements IUserDao {
-    public UserDao() {
-        super();
-    }
-
     @Override
     public User getByNickname(String nickname) {
         try (CloseableSession session = HibernateHelper.getSession()) {

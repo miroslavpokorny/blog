@@ -78,6 +78,20 @@ abstract public class DaoBase<T> implements IDao<T> {
     }
 
     @Override
+    public void saveOrUpdate(T entity) {
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            try {
+                session.delegate().getTransaction().begin();
+                session.delegate().saveOrUpdate(entity);
+                session.delegate().getTransaction().commit();
+            } catch (Exception e) {
+                session.delegate().getTransaction().rollback();
+                throw e;
+            }
+        }
+    }
+
+    @Override
     public void update(T entity) {
         try (CloseableSession session = HibernateHelper.getSession()) {
             try {

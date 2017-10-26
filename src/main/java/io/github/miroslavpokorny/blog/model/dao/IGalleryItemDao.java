@@ -5,7 +5,7 @@ import io.github.miroslavpokorny.blog.model.GalleryItem;
 import java.util.List;
 
 public interface IGalleryItemDao extends IDao<GalleryItem> {
-    boolean addImagesToGallery(List<GalleryItem> items);
-    List<GalleryItem> getAllItemsForGallery(int galleryId);
+    void addImagesToGallery(List<GalleryItem> items);
+    List<GalleryItem> getAllItemsInGallery(int galleryId);
     GalleryItem getGalleryItemById(int id);
 }

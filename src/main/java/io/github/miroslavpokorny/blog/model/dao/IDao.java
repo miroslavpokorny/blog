@@ -10,6 +10,7 @@ public interface IDao<T> {
     void create(T entity);
     void update(T entity);
     void delete(T entity);
+    void saveOrUpdate(T entity);
     T getById(int id);
     T loadById(int id);
 }

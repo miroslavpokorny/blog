@@ -7,12 +7,13 @@ import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.util.List;
 
-@Service
+@Repository
 public class ArticleRatingDao extends DaoBase<ArticleRating> implements IArticleRatingDao {
 
     private final IUserDao userDao;

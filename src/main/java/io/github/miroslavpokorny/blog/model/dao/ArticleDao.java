@@ -5,12 +5,13 @@ import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.util.List;
 
-@Service
+@Repository
 public class ArticleDao extends DaoBase<Article> implements IArticleDao {
     @Override
     public List<Article> getAllByUserId(int id) {
