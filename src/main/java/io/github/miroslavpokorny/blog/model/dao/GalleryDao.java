@@ -7,7 +7,6 @@ import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -41,13 +40,27 @@ public class GalleryDao extends DaoBase<Gallery> implements IGalleryDao {
 
     @Override
     public List<Gallery> getAllGalleries() {
-        // TODO implement
-        throw new NotImplementedException();
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
+            CriteriaQuery<Gallery> criteriaQuery = criteriaBuilder.createQuery(Gallery.class);
+            Root<Gallery> from = criteriaQuery.from(Gallery.class);
+            from.fetch("author");
+            Query<Gallery> query = session.delegate().createQuery(criteriaQuery);
+            return query.getResultList();
+        }
     }
 
     @Override
     public Gallery getGalleryById(int id) {
-        // TODO implement
-        throw new NotImplementedException();
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
+            ParameterExpression<Integer> galleryIdExpression = criteriaBuilder.parameter(Integer.class);
+            CriteriaQuery<Gallery> criteriaQuery = criteriaBuilder.createQuery(Gallery.class);
+            Root<Gallery> from = criteriaQuery.from(Gallery.class);
+            from.fetch("author");
+            Query<Gallery> query = session.delegate().createQuery(criteriaQuery);
+            query.setParameter(galleryIdExpression, id);
+            return query.getSingleResult();
+        }
     }
 }
