@@ -21,17 +21,17 @@ public class HelloController {
     //TODO delete action
 
     @Autowired
-    private IArticleRatingDao articleRatingDao;
+    private ArticleRatingDao articleRatingDao;
     
     @RequestMapping(value = "/temp", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String tempAction() {
         StringBuilder result = new StringBuilder();
 
-        IUserDao userDao = new UserDao();
-        IArticleDao articleDao = new ArticleDao();
+        UserDao userDao = new io.github.miroslavpokorny.blog.model.dao.hibernate.UserDao();
+        ArticleDao articleDao = new io.github.miroslavpokorny.blog.model.dao.hibernate.ArticleDao();
 
-        ICategoryDao categoryDao = new CategoryDao();
+        CategoryDao categoryDao = new io.github.miroslavpokorny.blog.model.dao.hibernate.CategoryDao();
 
         User user1 = userDao.getByNickname("unknown");
         User user2 = userDao.getByEmail("administrator@example.com");

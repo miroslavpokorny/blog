@@ -4,7 +4,7 @@ import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
 
 import java.util.List;
 
-public interface IDao<T> {
+public interface Dao<T> {
     List<T> getAll();
     PaginationHelper<T> getAllWithPagination(int page, int itemsPerPage);
     void create(T entity);

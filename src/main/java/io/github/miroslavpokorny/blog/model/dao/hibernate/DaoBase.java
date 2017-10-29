@@ -1,5 +1,6 @@
-package io.github.miroslavpokorny.blog.model.dao;
+package io.github.miroslavpokorny.blog.model.dao.hibernate;
 
+import io.github.miroslavpokorny.blog.model.dao.Dao;
 import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import io.github.miroslavpokorny.blog.model.helper.ListHelper;
@@ -9,7 +10,7 @@ import org.hibernate.query.Query;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-abstract public class DaoBase<T> implements IDao<T> {
+abstract public class DaoBase<T> implements Dao<T> {
     private final Class<T> persistentClass;
 
     @SuppressWarnings("unchecked")
