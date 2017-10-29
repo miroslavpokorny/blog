@@ -3,11 +3,13 @@ package io.github.miroslavpokorny.blog.model.manager;
 import io.github.miroslavpokorny.blog.model.Article;
 import io.github.miroslavpokorny.blog.model.ArticleRating;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class DefaultArticleManager implements ArticleManager {
     @Override
     public List<Article> getAllArticlesByUserId(int userId) {

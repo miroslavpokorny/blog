@@ -2,10 +2,12 @@ package io.github.miroslavpokorny.blog.model.manager;
 
 import io.github.miroslavpokorny.blog.model.Gallery;
 import io.github.miroslavpokorny.blog.model.GalleryItem;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
+@Service
 public class DefaultGalleryManager implements GalleryManager {
     @Override
     public List<Gallery> getAllGalleries() {

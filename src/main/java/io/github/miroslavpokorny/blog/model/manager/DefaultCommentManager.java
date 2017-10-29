@@ -1,10 +1,12 @@
 package io.github.miroslavpokorny.blog.model.manager;
 
 import io.github.miroslavpokorny.blog.model.Comment;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
+@Service
 public class DefaultCommentManager implements CommentManager {
     @Override
     public Comment createComment(Comment comment) {

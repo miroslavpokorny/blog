@@ -1,10 +1,12 @@
 package io.github.miroslavpokorny.blog.model.manager;
 
 import io.github.miroslavpokorny.blog.model.Category;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
+@Service
 public class DefaultCategoryManager implements CategoryManager {
     @Override
     public List<Category> getAllCategories() {
