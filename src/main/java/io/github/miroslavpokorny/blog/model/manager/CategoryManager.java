@@ -10,6 +10,6 @@ public interface CategoryManager {
     Category createCategory(Category category);
     void deleteCategoryByID(int id);
     Category getCategoryById(int id);
-    Category updateCategory(int id, String name, String description);
-    Category updateCategory(Category category);
+    void updateCategory(int id, String name, String description);
+    void updateCategory(Category category);
 }
