@@ -39,7 +39,7 @@ public class HelloController {
         System.out.println(user1);
         System.out.println(user2);
 
-        float rating = articleRatingDao.getAvgRatingForArticleById(1);
+        float rating = articleRatingDao.getAvgRatingByArticleId(1);
         System.out.println(rating);
         PaginationHelper<Article> page1 = articleDao.getArticlesSearch(1, 3 , "TEST");
         PaginationHelper<Article> page2 = articleDao.getArticlesSearch(2, 3 , "TEST");

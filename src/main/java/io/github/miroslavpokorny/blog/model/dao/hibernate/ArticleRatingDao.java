@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
+import java.util.List;
 
 @Repository
 public class ArticleRatingDao extends DaoBase<ArticleRating> implements io.github.miroslavpokorny.blog.model.dao.ArticleRatingDao {
@@ -25,15 +26,24 @@ public class ArticleRatingDao extends DaoBase<ArticleRating> implements io.githu
         this.userDao = userDao;
         this.articleDao = articleDao;
     }
-    //    public List<Object[]> getAvgRatingForArticles(List<Integer> articleIds) {
-//        try (CloseableSession session = HibernateHelper.getSession()) {
-//
-//                    //TODO Write this query
-//        }
-//    }
 
     @Override
-    public float getAvgRatingForArticleById(int id) {
+    public List<ArticleRating> getAvgRatingForArticles(List<Integer> articleIds) {
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
+            // ParameterExpression<Integer> articleIdExpression = criteriaBuilder.parameter(Integer.class);
+            CriteriaQuery<ArticleRating> criteriaQuery = criteriaBuilder.createQuery(ArticleRating.class);
+            Root<ArticleRating> from = criteriaQuery.from(ArticleRating.class);
+            from.fetch("article");
+            from.fetch("user");
+            criteriaQuery.where(from.get("article").in(articleIds));
+            Query<ArticleRating> query = session.delegate().createQuery(criteriaQuery);
+            return query.getResultList();
+        }
+    }
+
+    @Override
+    public float getAvgRatingByArticleId(int id) {
         try (CloseableSession session = HibernateHelper.getSession()) {
             CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
             ParameterExpression<Article> articleExpression = criteriaBuilder.parameter(Article.class);

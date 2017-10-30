@@ -65,12 +65,14 @@ abstract public class DaoBase<T> implements Dao<T> {
 //    }
 
     @Override
-    public void create(T entity) {
+    @SuppressWarnings("unchecked")
+    public T create(T entity) {
         try (CloseableSession session = HibernateHelper.getSession()) {
             try {
                 session.delegate().getTransaction().begin();
-                session.delegate().save(entity);
+                T savedEntity = (T) session.delegate().save(entity);
                 session.delegate().getTransaction().commit();
+                return savedEntity;
             } catch (Exception e) {
                 session.delegate().getTransaction().rollback();
                 throw e;
