@@ -10,14 +10,14 @@ public interface GalleryManager {
     List<Gallery> getGalleriesByUserId(int id);
     Gallery createGallery(int authorId, String name, String description);
     Gallery createGallery(Gallery gallery);
-    boolean addImagesToGallery(int galleryId, List<String> fileNames);
+    void addImagesToGallery(int galleryId, List<String> fileNames);
     Gallery getGalleryById(int id);
     List<GalleryItem> getAllGalleryItemsByGalleryId(int galleryId);
-    Gallery updateGallery(int id, String name, String description);
-    Gallery updateGallery(Gallery gallery);
+    void updateGallery(int id, String name, String description);
+    void updateGallery(Gallery gallery);
     GalleryItem getGalleryItemById(int id);
     void deleteGalleryItemById(int id);
     void deleteGalleryById(int id);
-    GalleryItem updateGalleryItem(int id, String title);
-    GalleryItem updateGalleryItem(GalleryItem galleryItem);
+    void updateGalleryItem(int id, String title);
+    void updateGalleryItem(GalleryItem galleryItem);
 }
