@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
     "react-scripts-ts": "2.8.0"
   },
@@ -19,6 +21,7 @@
     "@types/jest": "^21.1.5",
     "@types/node": "^8.0.47",
     "@types/react": "^16.0.19",
+    "@types/react-bootstrap": "^0.31.6",
     "@types/react-dom": "^16.0.2",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "^1.0.2",

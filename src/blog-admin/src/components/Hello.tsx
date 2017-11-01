@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './Hello.css';
+// import './Hello.css';
 
 export interface Props {
   name: string;
