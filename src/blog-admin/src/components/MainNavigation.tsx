@@ -9,20 +9,18 @@ import { RouteName } from '../Router';
 import { Redirect } from 'react-router';
 import { observer } from 'mobx-react';
 import { State } from '../BlogAdminStore';
+import { UserRole } from '../api/UserRole';
+import PageHelper from '../helpers/PageHelper';
 
 interface MainNavigationProps {
     pathName: string;
 }
 
 @observer
-class MainNavigation extends React.Component<MainNavigationProps> /*<NavigationParams, {}>*/ {
+class MainNavigation extends React.Component<MainNavigationProps> {
     constructor(props: MainNavigationProps) {
         super(props);
         State.mainNavigation.currentLink = props.pathName;
-    }
-    
-    handleSelect(route: {}) {
-        State.mainNavigation.redirectLink = route as RouteName;
     }
 
     componentDidUpdate() {
@@ -44,17 +42,19 @@ class MainNavigation extends React.Component<MainNavigationProps> /*<NavigationP
             <Navbar onSelect={(eventKey) => this.handleSelect(eventKey)}>
                 <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to="/">Administration</Link>
+                    <Link to={RouteName.home}>Blog Administration</Link>
                 </Navbar.Brand>
                 </Navbar.Header>
                 <Nav>
                 <NavItem eventKey={RouteName.about} href="#">About</NavItem>
-                <NavDropdown title="Profile" id="basic-nav-dropdown">
-                    <MenuItem eventKey={RouteName.profile}>Profile</MenuItem>
-                    <MenuItem eventKey={RouteName.profileEdit}>Edit profile</MenuItem>
-                    <MenuItem eventKey={RouteName.profileUploadAvatar}>Upload avatar</MenuItem>
-                    <MenuItem eventKey={RouteName.profileChangePassword}>Change password</MenuItem>
-                </NavDropdown>
+                {this.canDisplay(UserRole.User) &&
+                    <NavDropdown title="Profile" id="basic-nav-dropdown">
+                        <MenuItem eventKey={RouteName.profile}>Profile</MenuItem>
+                        <MenuItem eventKey={RouteName.profileEdit}>Edit profile</MenuItem>
+                        <MenuItem eventKey={RouteName.profileUploadAvatar}>Upload avatar</MenuItem>
+                        <MenuItem eventKey={RouteName.profileChangePassword}>Change password</MenuItem>
+                    </NavDropdown>
+                }
                 <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
                     <MenuItem eventKey={3.1}>Action</MenuItem>
                     <MenuItem eventKey={3.2}>Another action</MenuItem>
@@ -63,8 +63,27 @@ class MainNavigation extends React.Component<MainNavigationProps> /*<NavigationP
                     <MenuItem eventKey={3.4}>Separated link</MenuItem>
                 </NavDropdown>
                 </Nav>
+                <Nav pullRight={true}>
+                {this.isUserSignedIn() ? (
+                    <NavItem eventKey={RouteName.signOut} href="#">Sign out</NavItem>
+                ) : (
+                    <NavItem eventKey={RouteName.signIn} href="#">Sign in</NavItem>
+                )}
+                </Nav>
             </Navbar>
         );
+    }
+
+    private handleSelect(route: {}) {
+        State.mainNavigation.redirectLink = route as RouteName;
+    }
+
+    private canDisplay(minUserRole: UserRole): boolean {
+        return State.userRole !== undefined && State.userRole >= minUserRole;
+    }
+
+    private isUserSignedIn(): boolean {
+        return PageHelper.isUserSignedIn();
     }
 }
 
