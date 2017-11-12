@@ -1,17 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import App from './App';
+import Router from './Router';
 import registerServiceWorker from './registerServiceWorker';
-// import './index.css';
-// import Hello from './components/Hello';
+import { State } from './BlogAdminStore';
+
+// Styles
 import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/css/bootstrap-theme.css';
-import MainNavigation from './components/MainNavigation';
+
+// tslint:disable-next-line:no-console
+console.log(State);
 
 ReactDOM.render(
-  // <App />,
-  <MainNavigation />,
-  // <Hello name="TypeScript" enthusiasmLevel={10} />,
-  document.getElementById('root') as HTMLElement
+    <Router />,
+    document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
