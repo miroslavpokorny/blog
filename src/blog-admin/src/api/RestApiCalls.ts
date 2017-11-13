@@ -41,27 +41,6 @@ export function callRestApiWithResult<T extends JsonBase | ErrorMessageJson>(
             }
             return callback(JSON.stringify(error));
         });
-        // let client = rest.wrap(mime).wrap(template, { params: { 'tokenId': getTokenId() } });
-        // client({ 
-        //     path: endpoint, 
-        //     method: 'post',
-        //     entity: data,
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     }
-        // }).then((response) => {
-        //     State.isLoading = false;
-        //     if (response.entity.type !== undefined) {
-        //         return response.entity.type === 'ErrorMessageJson' 
-        //         ? callback(response.entity.message)
-        //         : callback(undefined, response.entity as T); 
-        //     }
-        //     return callback('Unknown error!');
-        // }).catch((error) => {
-        //     State.isLoading = false;
-        //     return callback(error);
-        // });
     }    
 
 export function callRestApiWithoutResult (
@@ -92,24 +71,6 @@ export function callRestApiWithoutResult (
             }
             return callback(JSON.stringify(error));
         });
-        // let client = rest.wrap(mime);
-        // client({ 
-        //     path: endpoint, 
-        //     method: 'post',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     params: {
-        //         'tokenId': getTokenId()
-        //     }
-        // }).then((response) => {
-        //     State.isLoading = false;
-        //     return callback();
-        // }).catch((error) => {
-        //     State.isLoading = false;
-        //     return callback(error);
-        // });
     }
 
 function getTokenId() {
