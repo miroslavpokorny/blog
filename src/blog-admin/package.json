@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.17.1",
     "bootstrap": "^3.3.7",
+    "datejs": "^1.0.0-rc3",
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.4",
     "react": "^16.0.0",
@@ -20,6 +22,8 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/datejs": "^0.0.30",
     "@types/enzyme": "^3.1.2",
     "@types/enzyme-adapter-react-16": "^1.0.0",
     "@types/jest": "^21.1.5",
