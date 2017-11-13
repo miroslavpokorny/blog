@@ -74,7 +74,6 @@ export function callRestApiWithoutResult (
     }
 
 function getTokenId() {
-    console.log(State);
     return State.loggedUser.tokenId !== undefined && State.loggedUser.tokenId.trim().length > 0 
         ? State.loggedUser.tokenId 
         : null;

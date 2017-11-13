@@ -4,6 +4,7 @@ import PageHelper from '../helpers/PageHelper';
 import { RouteName } from '../Router';
 import { State } from '../BlogAdminStore';
 import SignIn from '../components/SignIn';
+import LoadingOverlay from '../components/LoadingOverlay';
 import { observer } from 'mobx-react';
 import { SignInAction } from '../api/SignControllerApi';
 
@@ -28,14 +29,16 @@ export default class SignPage extends React.Component<PageProps> {
     }
     
     render() {
-        var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)tokenId\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-        console.log(cookieValue);
         switch (this.props.match.params.action) {
             case 'in':
                 if (PageHelper.isUserSignedIn()) {
                     return <Redirect push={true} to={RouteName.home} />;
                 }
-                return <SignIn handleClick={() => this.onSignInClick()} errorMessage={this.state.errorMessage}/>;
+                return (
+                    <div>
+                        <SignIn handleClick={() => this.onSignInClick()}errorMessage={this.state.errorMessage}/>,
+                        <LoadingOverlay display={State.isLoading} text="Loading"/>
+                    </div>);
             case 'up':
                 
                 return false;

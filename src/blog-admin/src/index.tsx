@@ -21,6 +21,6 @@ const tokenId = document.cookie.replace(/(?:(?:^|.*;\s*)tokenId\s*\=\s*([^;]*).*
 if (tokenId !== undefined && tokenId.trim().length !== 0) {
     State.loggedUser.tokenId = tokenId;
     GetLoggedUserAction((error) => {
-        console.log(error);
+        // No action needed for success and for error
     });
 }
