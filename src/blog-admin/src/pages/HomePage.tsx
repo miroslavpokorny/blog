@@ -1,10 +1,10 @@
 import * as React from 'react';
 import MainNavigation from '../components/MainNavigation';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 import PageHelper from '../helpers/PageHelper';
 import { State } from '../BlogAdminStore';
 import { RouteName } from '../Router';
-import { Link } from 'react-router-dom';
+import { observer } from 'mobx-react';
 
 interface HomePageParams {
     action?: string;
@@ -13,18 +13,18 @@ interface HomePageParams {
 interface PageProps extends RouteComponentProps<HomePageParams> {
 }
 
+@observer
 export default class HomePage extends React.Component<PageProps> {
     render() {
+        if (!PageHelper.isUserSignedIn()) {
+            return <Redirect to={RouteName.signIn} />;
+        }
         return (
             <div>
                 <MainNavigation pathName={this.props.location.pathname} />
                 <div className="container">
                     <h1>Welcome to blog administration!</h1>
-                    {PageHelper.isUserSignedIn() ? (
-                        <p>You are signed as <strong>{State.profile.nickname}</strong></p>
-                    ) : (
-                        <p>Click <Link to={RouteName.signIn}>here to sign in</Link></p>
-                    )}
+                    <p>You are signed as <strong>{State.loggedUser.nickname}</strong></p>
                 </div>
             </div>
         );

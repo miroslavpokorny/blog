@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
 import { State } from '../BlogAdminStore';
 import { UserRole } from '../api/UserRole';
 import PageHelper from '../helpers/PageHelper';
+import { SignOutAction } from '../api/SignControllerApi';
 
 interface MainNavigationProps {
     pathName: string;
@@ -18,9 +19,15 @@ interface MainNavigationProps {
 
 @observer
 class MainNavigation extends React.Component<MainNavigationProps> {
+    state: {
+        signingOut: boolean;
+    };
     constructor(props: MainNavigationProps) {
         super(props);
         State.mainNavigation.currentLink = props.pathName;
+        this.state = {
+            signingOut: false
+        };
     }
 
     componentDidUpdate() {
@@ -65,7 +72,16 @@ class MainNavigation extends React.Component<MainNavigationProps> {
                 </Nav>
                 <Nav pullRight={true}>
                 {this.isUserSignedIn() ? (
-                    <NavItem eventKey={RouteName.signOut} href="#">Sign out</NavItem>
+                    <NavItem onClick={
+                        () => {
+                            this.setState({ signingOut: true });
+                            SignOutAction((error) => {
+                                if (error) {
+                                    this.setState({ signingOut: false });
+                                }
+                            });
+                        }
+                    } href="#">{this.state.signingOut ? 'Signing out...' : 'Sign out'}</NavItem>
                 ) : (
                     <NavItem eventKey={RouteName.signIn} href="#">Sign in</NavItem>
                 )}
@@ -79,7 +95,7 @@ class MainNavigation extends React.Component<MainNavigationProps> {
     }
 
     private canDisplay(minUserRole: UserRole): boolean {
-        return State.userRole !== undefined && State.userRole >= minUserRole;
+        return State.loggedUser.role !== undefined && State.loggedUser.role >= minUserRole;
     }
 
     private isUserSignedIn(): boolean {

@@ -9,13 +9,13 @@ export default class PageHelper {
         minimalAccessRight: UserRole, 
         renderCallback: () => JSX.Element | JSX.Element[] | React.ReactPortal | string | number | null | false
     ): JSX.Element | JSX.Element[] | React.ReactPortal | string | number | null | false {
-        if (State.userRole === undefined || State.userRole < minimalAccessRight) {
+        if (State.loggedUser.role === undefined || State.loggedUser.role < minimalAccessRight) {
             return <Redirect push={true} to={RouteName.home} />;
         }
         return renderCallback();
     }
 
     static isUserSignedIn(): boolean {
-        return State.userRole !== undefined;
+        return State.loggedUser.role !== undefined;
     }
 }

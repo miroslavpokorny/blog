@@ -5,6 +5,7 @@ import { RouteName } from '../Router';
 import { State } from '../BlogAdminStore';
 import SignIn from '../components/SignIn';
 import { observer } from 'mobx-react';
+import { SignInAction } from '../api/SignControllerApi';
 
 interface SignPageParams {
     action: string;
@@ -27,6 +28,8 @@ export default class SignPage extends React.Component<PageProps> {
     }
     
     render() {
+        var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)tokenId\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+        console.log(cookieValue);
         switch (this.props.match.params.action) {
             case 'in':
                 if (PageHelper.isUserSignedIn()) {
@@ -39,24 +42,18 @@ export default class SignPage extends React.Component<PageProps> {
             case 'password':
 
                 return false;
-            case 'out':
             default:
-                // TODO sing out API and remove state
-                return <Redirect push={true} to={RouteName.home} />;
+                return <Redirect push={true} to={RouteName.signIn} />;
         }
     }
 
     private onSignInClick(): void {
         if (State.signInForm.email.trim().length !== 0 && State.signInForm.password.length !== 0) {
-            // TODO call api
-            State.isLoading = true;
-            setTimeout(
-                () => {
-                    State.isLoading = false;
-                    this.setState({ errorMessage: 'Incorrect'});
-                }, 
-                3000
-            );
+            SignInAction(State.signInForm.email, State.signInForm.password, (error) => {
+                if (error !== undefined) {
+                    return this.setState({ errorMessage: error });
+                }
+            });
         }
     }
 }

@@ -36,13 +36,15 @@ class SignIn extends React.Component<SignInProps> {
                         type="email" 
                         value={State.signInForm.email} 
                         placeholder="Email address" 
-                        onChange={(event) => this.handleEmailChange((event.target as HTMLInputElement).value)} />
+                        onChange={(event) => this.handleEmailChange((event.target as HTMLInputElement).value)}
+                        onKeyUp={(event) => {if (event.keyCode === 13) { this.props.handleClick(); }}} />
                     <label className="sr-only">Password</label>
                     <FormControl
                         type="password"
                         value={State.signInForm.password}
                         placeholder="Password"
-                        onChange={(event) => this.handlePasswordChange((event.target as HTMLInputElement).value)} />
+                        onChange={(event) => this.handlePasswordChange((event.target as HTMLInputElement).value)}
+                        onKeyUp={(event) => {if (event.keyCode === 13) { this.props.handleClick(); }}} />
                         <Link to={RouteName.signUp}>Sign up</Link>&nbsp;|&nbsp;
                         <Link to={RouteName.signPassword}>Restore password</Link>
                     <Button 

@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { UserRole } from './api/UserRole';
+import { LoggedUser } from './api/SignControllerApi';
 
 export interface MainNavigation {
     currentLink?: string;
@@ -24,9 +24,6 @@ export class BlogAdminStore {
         redirectLink: undefined
     };
 
-    @observable 
-    userRole: UserRole | undefined = undefined;
-
     @observable
     profile: ProfileInfo = {
         nickname: '',
@@ -41,6 +38,17 @@ export class BlogAdminStore {
     signInForm: SignInForm = {
         email: '',
         password: '',
+    };
+
+    endpoint: string = '';
+
+    @observable
+    loggedUser: LoggedUser = {
+        id: undefined,
+        lastSignInDate: undefined,
+        role: undefined,
+        nickname: undefined,
+        tokenId: undefined
     };
 }
 
