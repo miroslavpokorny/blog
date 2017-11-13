@@ -24,7 +24,7 @@ public class UserDao extends DaoBase<User> implements io.github.miroslavpokorny.
             criteriaQuery.where(criteriaBuilder.equal(from.get("nickname"), nicknameExpression));
             Query<User> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(nicknameExpression, nickname);
-            return query.getSingleResult();
+            return query.uniqueResult();
         }
     }
 
@@ -39,7 +39,7 @@ public class UserDao extends DaoBase<User> implements io.github.miroslavpokorny.
             criteriaQuery.where(criteriaBuilder.equal(from.get("email"), emailExpression));
             Query<User> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(emailExpression, email);
-            return query.getSingleResult();
+            return query.uniqueResult();
         }
     }
 }
