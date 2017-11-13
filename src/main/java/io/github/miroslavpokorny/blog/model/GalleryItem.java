@@ -1,6 +1,11 @@
 package io.github.miroslavpokorny.blog.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class GalleryItem {
+    @Id
     private int id;
 
     private String imageName;

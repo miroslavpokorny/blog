@@ -1,8 +1,16 @@
 package io.github.miroslavpokorny.blog.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name="User")
 public class User {
+    @Id
+    @GeneratedValue
     private int id;
 
     private String name;

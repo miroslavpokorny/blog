@@ -1,9 +1,13 @@
 package io.github.miroslavpokorny.blog.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class Comment {
+    @Id
     private int id;
 
     private Article article;
