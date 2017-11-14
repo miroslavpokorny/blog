@@ -11,7 +11,7 @@ import './SignIn.css';
 import { Validation } from '../helpers/ValidationHelper';
 
 export interface SignInProps {
-    handleClick: () => void;
+    handleSignIn: (email: string, password: string) => void;
     errorMessage?: string;
 }
 
@@ -20,15 +20,17 @@ class SignIn extends React.Component<SignInProps> {
     state: {
         emailFilled: boolean;
         passwordFilled: boolean;
+        email: string;
+        password: string;
     };
     
     constructor(props: SignInProps) {
         super(props);
-        State.signInForm.email = '';
-        State.signInForm.password = '';
         this.state = {
             emailFilled: false,
-            passwordFilled: false
+            passwordFilled: false,
+            email: '',
+            password: ''
         };
     }
     
@@ -43,26 +45,28 @@ class SignIn extends React.Component<SignInProps> {
                         </Alert>
                     }
                     <FormGroup className="one-px-margin-bottom" validationState={this.state.emailFilled 
-                        ? Validation.notEmpty(State.signInForm.email).email().toString() 
+                        ? Validation.notEmpty(this.state.email).email().toString() 
                         : undefined} >
                         <label className="sr-only">Email address</label>
                         <FormControl 
                             type="email" 
-                            value={State.signInForm.email} 
+                            value={this.state.email} 
                             placeholder="Email address" 
                             onChange={(event) => this.handleEmailChange((event.target as HTMLInputElement).value)}
-                            onKeyUp={(event) => {if (event.keyCode === 13) { this.props.handleClick(); }}} />
+                            onKeyUp={(event) => {if (event.keyCode === 13) { 
+                                this.props.handleSignIn(this.state.email, this.state.password); }}} />
                     </FormGroup>
                     <FormGroup validationState={this.state.passwordFilled
-                        ? Validation.notEmpty(State.signInForm.password).toString()
+                        ? Validation.notEmpty(this.state.password).toString()
                         : undefined} >
                         <label className="sr-only">Password</label>
                         <FormControl
                             type="password"
-                            value={State.signInForm.password}
+                            value={this.state.password}
                             placeholder="Password"
                             onChange={(event) => this.handlePasswordChange((event.target as HTMLInputElement).value)}
-                            onKeyUp={(event) => {if (event.keyCode === 13) { this.props.handleClick(); }}} />
+                            onKeyUp={(event) => {if (event.keyCode === 13) { 
+                                this.props.handleSignIn(this.state.email, this.state.password); }}} />
                     </FormGroup>
                         <Link to={RouteName.signUp}>Sign up</Link>&nbsp;|&nbsp;
                         <Link to={RouteName.signPassword}>Restore password</Link>
@@ -70,8 +74,8 @@ class SignIn extends React.Component<SignInProps> {
                         bsStyle="primary" 
                         bsSize="large" 
                         block={true}
-                        disabled={State.isLoading}
-                        onClick={State.isLoading ? undefined : () => this.props.handleClick()}>
+                        onClick={State.isLoading ? undefined : () => { 
+                            this.props.handleSignIn(this.state.email, this.state.password); }}>
                         Sign in
                     </Button>
                 </form>
@@ -80,12 +84,12 @@ class SignIn extends React.Component<SignInProps> {
     }
 
     private handleEmailChange(value: string) {
-        State.signInForm.email = value;
+        this.setState({ email: value });
         this.state.emailFilled = true;
     }
 
     private handlePasswordChange(value: string) {
-        State.signInForm.password = value;
+        this.setState({ password: value });
         this.state.passwordFilled = true;
     }
 }

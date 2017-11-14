@@ -12,11 +12,6 @@ export interface ProfileInfo {
     nickname: string;
 }
 
-export interface SignInForm {
-    email: string;
-    password: string;
-}
-
 export class BlogAdminStore {
     @observable 
     mainNavigation: MainNavigation = {
@@ -33,12 +28,6 @@ export class BlogAdminStore {
 
     @observable
     isLoading: boolean = false;
-
-    @observable
-    signInForm: SignInForm = {
-        email: '',
-        password: '',
-    };
 
     endpoint: string = '';
 

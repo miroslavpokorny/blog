@@ -7,6 +7,7 @@ import SignIn from '../components/SignIn';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { observer } from 'mobx-react';
 import { SignInAction } from '../api/SignControllerApi';
+import { Validation } from '../helpers/ValidationHelper';
 
 interface SignPageParams {
     action: string;
@@ -36,7 +37,8 @@ export default class SignPage extends React.Component<PageProps> {
                 }
                 return (
                     <div>
-                        <SignIn handleClick={() => this.onSignInClick()}errorMessage={this.state.errorMessage}/>,
+                        <SignIn handleSignIn={(email, password) => {
+                            this.onSignInClick(email, password); }} errorMessage={this.state.errorMessage}/>,
                         <LoadingOverlay display={State.isLoading} text="Loading"/>
                     </div>);
             case 'up':
@@ -50,9 +52,9 @@ export default class SignPage extends React.Component<PageProps> {
         }
     }
 
-    private onSignInClick(): void {
-        if (State.signInForm.email.trim().length !== 0 && State.signInForm.password.length !== 0) {
-            SignInAction(State.signInForm.email, State.signInForm.password, (error) => {
+    private onSignInClick(email: string, password: string): void {
+        if (Validation.notEmpty(email).email().isValid() && Validation.notEmpty(password).isValid()) {
+            SignInAction(email, password, (error) => {
                 if (error !== undefined) {
                     return this.setState({ errorMessage: error });
                 }

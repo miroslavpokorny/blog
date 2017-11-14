@@ -1,7 +1,9 @@
+import { assertNever } from './AssertNever';
+
 export enum ValidationState {
     Success = 'success',
     Error = 'error',
-    Warning = 'warning'
+    // Warning = 'warning'
 }
 
 export class Validation {
@@ -65,6 +67,18 @@ export class Validation {
 
     toString(): ValidationState {
         return this.validate();
+    }
+
+    isValid(): boolean {
+        const validationResult = this.validate();
+        switch (validationResult) {
+            case ValidationState.Success:
+                return true;
+            case ValidationState.Error:
+                return false;
+            default:
+                return assertNever(validationResult);
+        }
     }
     
     private constructor(value: number | string | boolean) {
