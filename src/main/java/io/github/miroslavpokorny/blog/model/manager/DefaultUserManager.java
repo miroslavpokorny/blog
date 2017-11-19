@@ -6,15 +6,21 @@ import io.github.miroslavpokorny.blog.model.UserRole;
 import io.github.miroslavpokorny.blog.model.dao.UserDao;
 import io.github.miroslavpokorny.blog.model.dao.UserQuestionDao;
 import io.github.miroslavpokorny.blog.model.dao.UserRoleDao;
+import io.github.miroslavpokorny.blog.model.error.EmailAlreadyExistsException;
+import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DefaultUserManager implements UserManager{
+    private static final String DEFAULT_AVATAR_NAME = "avatar.png";
+
     private final UserDao userDao;
 
     private final UserRoleDao userRoleDao;
@@ -30,22 +36,22 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public User createUser(String email, String password, String nickname) {
-        return createUser(email, password, nickname, null, null, true, null);
+        return createUser(email, password, nickname, null, null, true, DEFAULT_AVATAR_NAME);
     }
 
     @Override
     public User createUser(String email, String password, String nickname, String name) {
-        return createUser(email, password, nickname, name, null, true, null);
+        return createUser(email, password, nickname, name, null, true, DEFAULT_AVATAR_NAME);
     }
 
     @Override
     public User createUser(String email, String password, String nickname, String name, String surname) {
-        return createUser(email, password, nickname, name, surname, true, null);
+        return createUser(email, password, nickname, name, surname, true, DEFAULT_AVATAR_NAME);
     }
 
     @Override
     public User createUser(String email, String password, String nickname, String name, String surname, boolean enabled) {
-        return createUser(email, password, nickname, name, surname, enabled, null);
+        return createUser(email, password, nickname, name, surname, enabled, DEFAULT_AVATAR_NAME);
     }
 
     @Override
@@ -62,12 +68,23 @@ public class DefaultUserManager implements UserManager{
         user.setName(name);;
         user.setPassword(password);
         user.setNickname(nickname);
+        user.setActivated(true);
         return createUser(user);
     }
 
     @Override
     public User createUser(User user) {
-        return userDao.create(user);
+        try {
+            return userDao.create(user);
+        } catch (ConstraintViolationException exception) {
+            if (exception.getConstraintName().equals("Nickname_UNIQUE")) {
+                throw new NicknameAlreadyExistsException("User with nickname '" + user.getNickname() + "' already exists!", exception);
+            }
+            if (exception.getConstraintName().equals("Email_UNIQUE")) {
+                throw new EmailAlreadyExistsException("User with email '" + user.getEmail() + "' already exists!", exception);
+            }
+            throw exception;
+        }
     }
 
     @Override

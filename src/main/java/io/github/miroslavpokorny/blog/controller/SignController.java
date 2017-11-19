@@ -2,10 +2,14 @@ package io.github.miroslavpokorny.blog.controller;
 
 import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.model.User;
+import io.github.miroslavpokorny.blog.model.error.EmailAlreadyExistsException;
+import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
 import io.github.miroslavpokorny.blog.model.helper.GsonHelper;
+import io.github.miroslavpokorny.blog.model.helper.validation.Validator;
 import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
 import io.github.miroslavpokorny.blog.model.json.LoggedUserJson;
 import io.github.miroslavpokorny.blog.model.json.SignInCredentialsJson;
+import io.github.miroslavpokorny.blog.model.json.SignUpDataJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -67,9 +71,38 @@ public class SignController{
         return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping("/api/sign/ping")
-    public String isSigned(@RequestParam(value = "tokenId", required = false) String tokenId) {
-        return authentication.isAuthenticate(tokenId) ? "Auth" : "Not auth";
+    @RequestMapping("/api/sign/up")
+    public ResponseEntity isSigned(@RequestBody SignUpDataJson signUpData, @RequestParam(value = "tokenId", required = false) String tokenId) {
+        if (tokenId != null) {
+            authentication.destroyAuthentication(tokenId);
+        }
+        if (signUpData == null ||
+                !Validator.notEmpty(signUpData.getEmail()).email().isValid() ||
+                !Validator.notEmpty(signUpData.getNickname()).isValid() ||
+                !Validator.notEmpty(signUpData.getPassword()).isValid()) {
+            ErrorMessageJson json = new ErrorMessageJson();
+            json.setCode(HttpStatus.BAD_REQUEST.value());
+            json.setMessage("Bad data format, or missing required fields, please try reload page and try again.");
+            return new ResponseEntity<>(json, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            authentication.createUser(signUpData.getNickname(), signUpData.getEmail(), signUpData.getPassword(), signUpData.getSurname(), signUpData.getName());
+        } catch (NicknameAlreadyExistsException | EmailAlreadyExistsException exception) {
+            ErrorMessageJson json = new ErrorMessageJson();
+            json.setCode(HttpStatus.CONFLICT.value());
+            json.setMessage(exception.getMessage());
+            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+        }
+        String newTokenId = authentication.createAuthentication(signUpData.getEmail(), signUpData.getPassword());
+        if (newTokenId != null) {
+            LoggedUserJson json = getLoggedUserJson(newTokenId);
+            return new ResponseEntity<>(json, HttpStatus.OK);
+        } else {
+            ErrorMessageJson json = new ErrorMessageJson();
+            json.setMessage("Something went wrong during sign up");
+            json.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(json, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private LoggedUserJson getLoggedUserJson(String tokenId) {

@@ -70,9 +70,9 @@ abstract public class DaoBase<T> implements Dao<T> {
         try (CloseableSession session = HibernateHelper.getSession()) {
             try {
                 session.delegate().getTransaction().begin();
-                T savedEntity = (T) session.delegate().save(entity);
+                int savedId = (int) session.delegate().save(entity);
                 session.delegate().getTransaction().commit();
-                return savedEntity;
+                return this.getById(savedId);
             } catch (Exception e) {
                 session.delegate().getTransaction().rollback();
                 throw e;

@@ -27,6 +27,10 @@ export class Validation {
         return new Validation(value).between(min, max);
     }
 
+    public static sameAs(value: number | string | boolean, same: number | string | boolean) {
+        return new Validation(value).sameAs(same);
+    }
+
     notEmpty(): Validation {
         this.validations.push(() => {
             return !(typeof this.value === undefined ||
@@ -52,6 +56,13 @@ export class Validation {
     between(min: number, max: number): Validation {
         this.validations.push(() => {
             return (this.value > min && this.value < max);
+        });
+        return this;
+    }
+
+    sameAs(sameAs: string | number | boolean): Validation {
+        this.validations.push(() => {
+            return (this.value === sameAs);
         });
         return this;
     }

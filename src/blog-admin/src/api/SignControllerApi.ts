@@ -17,6 +17,14 @@ export interface SignInCredentials {
     password: string;
 }
 
+export interface SignUpData {
+    email: string;
+    nickname: string;
+    password: string;
+    name: string;
+    surname: string;
+}
+
 export function SignInAction(email: string, password: string, callback: (error?: string | object) => void) {
     const data: SignInCredentials = {
         email: email,
@@ -61,6 +69,35 @@ export function GetLoggedUserAction(callback: (error?: string | object) => void)
             return callback();
         }
     );
+}
+
+export function SignUpAction(
+    email: string, 
+    nickname: string, 
+    password: string, 
+    name: string, 
+    surname: string, 
+    callback: (error?: string | object) => void) {
+        const data: SignUpData = {
+            email: email,
+            nickname: nickname,
+            password: password,
+            name: name,
+            surname: surname
+        };
+        callRestApiWithResult<LoggedUser>(
+            Endpoint.SignUp,
+            (error, result) => {
+                if (error !== undefined) {
+                    return callback(error);
+                }
+                if (result !== undefined) {
+                    setLoggedUserState(result);
+                }
+                return callback();
+            },
+            data
+        );
 }
 
 function setLoggedUserState(loggedUser: LoggedUser) {

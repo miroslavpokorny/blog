@@ -4,9 +4,10 @@ import PageHelper from '../helpers/PageHelper';
 import { RouteName } from '../Router';
 import { State } from '../BlogAdminStore';
 import SignIn from '../components/SignIn';
+import SignUp from '../components/SignUp';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { observer } from 'mobx-react';
-import { SignInAction } from '../api/SignControllerApi';
+import { SignInAction, SignUpAction } from '../api/SignControllerApi';
 import { Validation } from '../helpers/ValidationHelper';
 
 interface SignPageParams {
@@ -39,11 +40,20 @@ export default class SignPage extends React.Component<PageProps> {
                     <div>
                         <SignIn handleSignIn={(email, password) => {
                             this.onSignInClick(email, password); }} errorMessage={this.state.errorMessage}/>,
-                        <LoadingOverlay display={State.isLoading} text="Loading"/>
+                        <LoadingOverlay display={State.isLoading} text="Signing in"/>
                     </div>);
             case 'up':
-                
-                return false;
+            if (PageHelper.isUserSignedIn()) {
+                return <Redirect push={true} to={RouteName.home} />;
+            }
+            return (
+                <div>
+                    <SignUp 
+                        handleSignUp={(email, nickname, password, confirmPassword, name, surname) => {
+                            this.onSignUpClick(email, nickname, password, confirmPassword, name, surname); }} 
+                        errorMessage={this.state.errorMessage}/>,
+                    <LoadingOverlay display={State.isLoading} text="Signing up"/>
+                </div>);
             case 'password':
 
                 return false;
@@ -59,6 +69,19 @@ export default class SignPage extends React.Component<PageProps> {
                     return this.setState({ errorMessage: error });
                 }
             });
+        }
+    }
+
+    private onSignUpClick(
+        email: string, nickname: string, password: string, confirmPassword: string, name: string, surname: string) {
+        if (Validation.notEmpty(email).email().isValid() && 
+            Validation.notEmpty(nickname).isValid() && 
+            Validation.notEmpty(password).sameAs(confirmPassword).isValid()) {
+                SignUpAction(email, nickname, password, name, surname, (error) => {
+                    if (error !== undefined) {
+                        return this.setState({ errorMessage: error });
+                    }
+                });
         }
     }
 }

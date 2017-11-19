@@ -59,7 +59,7 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public void createUser(String nickname, String email, String password, String surname, String name) {
-        userManager.createUser(nickname, email, BCrypt.hashpw(password, BCrypt.gensalt()), surname, name);
+        userManager.createUser(email, BCrypt.hashpw(password, BCrypt.gensalt()), nickname, name, surname);
     }
 
     @Override

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import * as enzyme from 'enzyme';
 import * as Adapter from 'enzyme-adapter-react-16';
 import { Validation, ValidationState } from './ValidationHelper';
@@ -33,4 +32,10 @@ it ('should test multiple validations', () => {
     expect(Validation.notEmpty('a@example.com').email().toString()).toEqual(ValidationState.Success);
     expect(Validation.email('').notEmpty().toString()).toEqual(ValidationState.Error);
     expect(Validation.notEmpty(10).between(0, 15).toString()).toEqual(ValidationState.Success);
+});
+
+it ('should test SameAs validation', () => {
+    expect(Validation.sameAs('aaa', 'aaa').toString()).toEqual(ValidationState.Success);
+    expect(Validation.sameAs('aaa', 'bbb').toString()).toEqual(ValidationState.Error);
+    expect(Validation.notEmpty('aaa').sameAs('aaa').toString()).toEqual(ValidationState.Success);
 });
