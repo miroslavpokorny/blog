@@ -12,6 +12,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -124,7 +125,29 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public void updateUser(User user) {
-        userDao.update(user);
+        try {
+            userDao.update(user);
+        } catch (ConstraintViolationException exception) {
+            if (exception.getConstraintName().equals("Nickname_UNIQUE")) {
+                throw new NicknameAlreadyExistsException("User with nickname '" + user.getNickname() + "' already exists!", exception);
+            }
+            if (exception.getConstraintName().equals("Email_UNIQUE")) {
+                throw new EmailAlreadyExistsException("User with email '" + user.getEmail() + "' already exists!", exception);
+            }
+            throw exception;
+        } catch (PersistenceException exception) {
+            if (exception.getCause() instanceof ConstraintViolationException) {
+                ConstraintViolationException constraintException = (ConstraintViolationException) exception.getCause();
+                if (constraintException.getConstraintName().equals("Nickname_UNIQUE")) {
+                    throw new NicknameAlreadyExistsException("User with nickname '" + user.getNickname() + "' already exists!", exception);
+                }
+                if (constraintException.getConstraintName().equals("Email_UNIQUE")) {
+                    throw new EmailAlreadyExistsException("User with email '" + user.getEmail() + "' already exists!", exception);
+                }
+            }
+            throw exception;
+        }
+
     }
 
     @Override

@@ -1,15 +1,10 @@
 import { observable } from 'mobx';
 import { LoggedUser } from './api/SignControllerApi';
+import { ProfileInfo } from './api/ProfileControllerApi';
 
 export interface MainNavigation {
     currentLink?: string;
     redirectLink?: string;
-}
-
-export interface ProfileInfo {
-    name?: string;
-    surname?: string;
-    nickname: string;
 }
 
 export class BlogAdminStore {
@@ -23,7 +18,8 @@ export class BlogAdminStore {
     profile: ProfileInfo = {
         nickname: '',
         surname: undefined,
-        name: undefined
+        name: undefined,
+        id: 0
     };
 
     @observable
