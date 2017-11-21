@@ -8,6 +8,7 @@ import ProfileEdit from '../components/ProfileEdit';
 import { Validation } from '../helpers/ValidationHelper';
 import { EditProfileAction } from '../api/ProfileControllerApi';
 import * as Alert from 'react-bootstrap/lib/Alert';
+import { observer } from 'mobx-react';
 
 interface ProfilePageParams {
     action?: string;
@@ -16,6 +17,7 @@ interface ProfilePageParams {
 interface PageProps extends RouteComponentProps<ProfilePageParams> {
 }
 
+@observer
 export default class ProfilePage extends React.Component<PageProps> {
     state: {
         errorMessage?: string;
@@ -30,7 +32,7 @@ export default class ProfilePage extends React.Component<PageProps> {
     }
     
     render() {
-        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.User, () => {
+        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.User, this.props.location.pathname, () => {
             return (
                 <div>
                     <MainNavigation pathName={this.props.location.pathname} />

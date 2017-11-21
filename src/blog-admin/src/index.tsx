@@ -21,6 +21,9 @@ const tokenId = document.cookie.replace(/(?:(?:^|.*;\s*)tokenId\s*\=\s*([^;]*).*
 if (tokenId !== undefined && tokenId.trim().length !== 0) {
     State.loggedUser.tokenId = tokenId;
     GetLoggedUserAction((error) => {
-        // No action needed for success and for error
+        if (error === undefined) {
+            State.mainNavigation.redirectLink = State.mainNavigation.redirectAfterSignIn;
+            return;
+        }
     });
 }

@@ -1,25 +1,18 @@
 import { observable } from 'mobx';
 import { LoggedUser } from './api/SignControllerApi';
-import { ProfileInfo } from './api/ProfileControllerApi';
 
 export interface MainNavigation {
     currentLink?: string;
     redirectLink?: string;
+    redirectAfterSignIn?: string;
 }
 
 export class BlogAdminStore {
     @observable 
     mainNavigation: MainNavigation = {
         currentLink: undefined,
-        redirectLink: undefined
-    };
-
-    @observable
-    profile: ProfileInfo = {
-        nickname: '',
-        surname: undefined,
-        name: undefined,
-        id: 0
+        redirectLink: undefined,
+        redirectAfterSignIn: undefined
     };
 
     @observable
