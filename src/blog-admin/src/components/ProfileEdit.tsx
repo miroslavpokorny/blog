@@ -18,18 +18,19 @@ export interface ProfileEditProps {
 @observer
 class ProfileEdit extends React.Component<ProfileEditProps> {
     state: {
-        nickname: string;
-        name: string;
-        surname: string;
+        nickname?: string;
+        name?: string;
+        surname?: string;
         errorMessage?: string;
     };
     
     constructor(props: ProfileEditProps) {
         super(props);
         this.state = {
-            name: '',
-            nickname: '',
-            surname: ''
+            name: undefined,
+            nickname: undefined,
+            surname: undefined,
+            errorMessage: undefined
         };
         if (State.loggedUser.id !== undefined) {
             LoadProfileAction(State.loggedUser.id, (error?: string | object, result?: ProfileInfo) => {
@@ -57,11 +58,12 @@ class ProfileEdit extends React.Component<ProfileEditProps> {
                             {this.state.errorMessage}
                         </Alert>
                     }
-                    <FormGroup validationState={Validation.notEmpty(this.state.nickname).toString()}>
+                    <FormGroup validationState={this.state.nickname 
+                        ? Validation.notEmpty(this.state.nickname).toString()  : 'error' }>
                         <label>Nickname</label>
                         <FormControl 
                             type="text" 
-                            value={this.state.nickname} 
+                            value={this.state.nickname || ''} 
                             placeholder="Nickname" 
                             disabled={this.props.handleClickEdit === undefined}
                             onChange={(event) => this.handleNicknameChange((event.target as HTMLInputElement).value)}/>
@@ -70,7 +72,7 @@ class ProfileEdit extends React.Component<ProfileEditProps> {
                         <label>Name</label>
                         <FormControl 
                             type="text" 
-                            value={this.state.name} 
+                            value={this.state.name || ''} 
                             placeholder="Name" 
                             disabled={this.props.handleClickEdit === undefined}
                             onChange={(event) => this.handleNameChange((event.target as HTMLInputElement).value)}/>
@@ -79,7 +81,7 @@ class ProfileEdit extends React.Component<ProfileEditProps> {
                         <label>Surname</label>
                         <FormControl 
                             type="text" 
-                            value={this.state.surname} 
+                            value={this.state.surname || ''} 
                             placeholder="Surname" 
                             disabled={this.props.handleClickEdit === undefined}
                             onChange={(event) => this.handleSurnameChange((event.target as HTMLInputElement).value)}/>
@@ -92,9 +94,9 @@ class ProfileEdit extends React.Component<ProfileEditProps> {
                             onClick={() => {
                                 if (this.props.handleClickEdit !== undefined) {
                                     this.props.handleClickEdit(
-                                        this.state.nickname, 
-                                        this.state.name, 
-                                        this.state.surname
+                                        this.state.nickname || '', 
+                                        this.state.name || '', 
+                                        this.state.surname || ''
                                     ); 
                                 }   
                             }}>
