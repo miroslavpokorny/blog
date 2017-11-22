@@ -22,6 +22,7 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@tinymce/tinymce-react": "^2.0.1",
     "@types/axios": "^0.14.0",
     "@types/datejs": "^0.0.30",
     "@types/enzyme": "^3.1.2",

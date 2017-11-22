@@ -58,17 +58,25 @@ class MainNavigation extends React.Component<MainNavigationProps> {
                     <NavDropdown title="Profile" id="basic-nav-dropdown">
                         <MenuItem eventKey={RouteName.profile}>Profile</MenuItem>
                         <MenuItem eventKey={RouteName.profileEdit}>Edit profile</MenuItem>
-                        <MenuItem eventKey={RouteName.profileUploadAvatar}>Upload avatar</MenuItem>
-                        <MenuItem eventKey={RouteName.profileChangePassword}>Change password</MenuItem>
+                        {/* <MenuItem eventKey={RouteName.profileUploadAvatar}>Upload avatar</MenuItem>
+                        <MenuItem eventKey={RouteName.profileChangePassword}>Change password</MenuItem> */}
                     </NavDropdown>
                 }
-                <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-                    <MenuItem eventKey={3.1}>Action</MenuItem>
-                    <MenuItem eventKey={3.2}>Another action</MenuItem>
-                    <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                    <MenuItem divider={true} />
-                    <MenuItem eventKey={3.4}>Separated link</MenuItem>
-                </NavDropdown>
+                {this.canDisplay(UserRole.Editor) &&
+                    <NavDropdown title="Articles" id="basic-nav-dropdown">
+                        <MenuItem eventKey={RouteName.article}>All articles</MenuItem>
+                        <MenuItem eventKey={RouteName.articleAdd}>Add article</MenuItem>
+                    </NavDropdown>
+                }
+                {this.canDisplay(UserRole.Moderator) &&
+                    <NavDropdown title="Categories" id="basic-nav-dropdown">
+                        <MenuItem eventKey={RouteName.category}>All categories</MenuItem>
+                        <MenuItem eventKey={RouteName.categoryAdd}>Add category</MenuItem>
+                    </NavDropdown>
+                }
+                {this.canDisplay(UserRole.Administrator) &&
+                    <NavItem eventKey={RouteName.user}>Users</NavItem>
+                }
                 </Nav>
                 <Nav pullRight={true}>
                 {this.isUserSignedIn() ? (
