@@ -13,6 +13,17 @@ public abstract class AuthorizeController {
         ErrorMessageJson json = new ErrorMessageJson();
         json.setCode(HttpStatus.UNAUTHORIZED.value());
         json.setMessage(message);
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
+    }
+
+    public ResponseEntity forbiddenResponse() {
+        return forbiddenResponse("FORBIDDEN");
+    }
+
+    public ResponseEntity forbiddenResponse(String message) {
+        ErrorMessageJson json = new ErrorMessageJson();
+        json.setCode(HttpStatus.FORBIDDEN.value());
+        json.setMessage(message);
+        return new ResponseEntity<>(json, HttpStatus.FORBIDDEN);
     }
 }
