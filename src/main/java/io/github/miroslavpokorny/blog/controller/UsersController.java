@@ -47,6 +47,7 @@ public class UsersController extends AuthorizeController {
             info.setNickname(user.getNickname());
             info.setSurname(user.getSurname());
             info.setRole(user.getRole().getId());
+            info.setEnabled(user.isEnabled());
             return info;
         }).collect(Collectors.toList());
         UsersListDto json = new UsersListDto();
@@ -56,4 +57,6 @@ public class UsersController extends AuthorizeController {
     private boolean isAccessAllowed(String tokenId) {
         return this.authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.ADMINISTRATOR);
     }
+
+    // TODO switch user state endpoint
 }

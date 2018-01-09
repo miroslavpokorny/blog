@@ -7,6 +7,7 @@ public class UserInfoDto extends JsonBase {
     private String email;
     private int role;
     private int id;
+    private boolean enabled;
 
     public String getName() {
         return name;
@@ -54,5 +55,13 @@ public class UserInfoDto extends JsonBase {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -1,17 +1,22 @@
 import { JsonBase } from "./JsonBase";
-import { callRestApiWithResult } from "./RestApiCalls";
+import {
+    callRestApiWithResult,
+    callRestApiWithoutResult
+} from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
+import { RequestId } from "./RequestId";
 
-interface UserInfoDto {
+export interface UserInfoDto {
     name: string;
     surname: string;
     nickname: string;
     email: string;
     role: number;
-    isEnabled: boolean;
+    enabled: boolean;
+    id: number;
 }
 
-interface UsersListDto extends JsonBase {
+export interface UsersListDto extends JsonBase {
     users: UserInfoDto[];
 }
 
@@ -24,4 +29,20 @@ export function GetUsersListAction(
         }
         return callback(undefined, result as UsersListDto);
     });
+}
+
+export function SwitchUserEnabledStateAction(
+    id: number,
+    callback: (error?: string | object) => void
+) {
+    let data: RequestId = {
+        id: id
+    };
+    callRestApiWithoutResult(
+        Endpoint.UsersSwitchEnabledState,
+        error => {
+            callback(error);
+        },
+        data
+    );
 }

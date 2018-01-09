@@ -5,5 +5,6 @@ export enum Endpoint {
     SignUp = "/api/sign/up",
     ProfileLoad = "/api/profile/load",
     ProfileEdit = "/api/profile/edit",
-    UsersList = "/api/users/list"
+    UsersList = "/api/users/list",
+    UsersSwitchEnabledState = "/api/users/switchEnabledState"
 }
