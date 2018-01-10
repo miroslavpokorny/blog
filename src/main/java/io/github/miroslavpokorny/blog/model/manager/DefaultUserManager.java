@@ -224,4 +224,9 @@ public class DefaultUserManager implements UserManager{
         userDao.update(user);
         return key;
     }
+
+    @Override
+    public UserRole getUserRoleById(int id) {
+        return userRoleDao.getById(id);
+    }
 }

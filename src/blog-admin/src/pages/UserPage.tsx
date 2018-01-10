@@ -10,7 +10,13 @@ import {
     SwitchUserEnabledStateAction
 } from "../api/UsersControllerApi";
 import * as Alert from "react-bootstrap/lib/Alert";
-import { Table } from "react-bootstrap";
+import {
+    Table,
+    Modal,
+    FormGroup,
+    ControlLabel,
+    FormControl
+} from "react-bootstrap";
 import * as Button from "react-bootstrap/lib/Button";
 import LoadingOverlay from "../components/LoadingOverlay";
 import { State } from "../BlogAdminStore";
@@ -28,13 +34,18 @@ export default class UserPage extends React.Component<PageProps> {
         usersList?: UsersListDto;
         errorMessage?: string;
         successMessage?: string;
+        showModal: boolean;
+        selectedUserId?: number;
     };
 
     constructor(props: PageProps) {
         super(props);
         this.state = {
             errorMessage: undefined,
-            usersList: undefined
+            usersList: undefined,
+            successMessage: undefined,
+            showModal: false,
+            selectedUserId: undefined
         };
         this.loadUsers();
     }
@@ -143,6 +154,17 @@ export default class UserPage extends React.Component<PageProps> {
                                                         ? "Enable user"
                                                         : "Disable user"}
                                                 </Button>
+                                                <Button
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            showModal: true,
+                                                            selectedUserId:
+                                                                item.id
+                                                        });
+                                                    }}
+                                                >
+                                                    Change role
+                                                </Button>
                                             </td>
                                         </tr>
                                     );
@@ -151,6 +173,42 @@ export default class UserPage extends React.Component<PageProps> {
                         </Table>
                     )}
                 <LoadingOverlay display={State.isLoading} />
+                {this.state.showModal && (
+                    <div className="static-modal">
+                        <Modal.Dialog>
+                            <Modal.Header>
+                                <Modal.Title>Choose role</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                <FormGroup controlId="formControlsSelect">
+                                    <ControlLabel>Role</ControlLabel>
+                                    <FormControl
+                                        componentClass="select"
+                                        placeholder="choose role"
+                                        // TODO handle select from combo box
+                                    >
+                                        <option value={1}>User</option>
+                                        <option value={2}>Editor</option>
+                                        <option value={3}>Moderator</option>
+                                        <option value={4}>Administrator</option>
+                                    </FormControl>
+                                </FormGroup>
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button
+                                    onClick={() => {
+                                        this.setState({ showModal: false });
+                                    }}
+                                >
+                                    Close
+                                </Button>
+                                <Button bsStyle="primary">change role</Button>
+                            </Modal.Footer>
+                        </Modal.Dialog>
+                    </div>
+                )}
             </div>
         );
     }

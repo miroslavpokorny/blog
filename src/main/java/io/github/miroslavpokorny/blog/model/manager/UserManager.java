@@ -30,4 +30,5 @@ public interface UserManager {
     List<User> getAllUsers();
     List<UserRole> getAllUserRoles();
     String setNewRestorePasswordKeyToUserById(int userId);
+    UserRole getUserRoleById(int id);
 }

@@ -3,16 +3,13 @@ package io.github.miroslavpokorny.blog.controller;
 import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.User;
-import io.github.miroslavpokorny.blog.model.json.UserInfoDto;
-import io.github.miroslavpokorny.blog.model.json.UsersListDto;
+import io.github.miroslavpokorny.blog.model.UserRole;
+import io.github.miroslavpokorny.blog.model.json.*;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,9 +51,59 @@ public class UsersController extends AuthorizeController {
         json.setUsers(usersInfo);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
+
     private boolean isAccessAllowed(String tokenId) {
         return this.authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.ADMINISTRATOR);
     }
 
-    // TODO switch user state endpoint
+    @RequestMapping("/api/users/switchEnabledState")
+    public ResponseEntity switchEnabledState(@RequestBody RequestByIdJson request, @RequestParam(value = "tokenId", required = true) String tokenId) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            return unAuthorizedResponse();
+        }
+        if (!this.isAccessAllowed(tokenId)) {
+            return forbiddenResponse();
+        }
+        if (authentication.getAuthenticatedUser(tokenId).getUser().getId() == request.getId()) {
+            ErrorMessageJson json = new ErrorMessageJson();
+            json.setMessage("You can't disable your account!");
+            json.setCode(HttpStatus.CONFLICT.value());
+            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+        }
+        User user = userManager.getUserById(request.getId());
+        if (user == null) {
+            return notFoundResponse("User not found!");
+        }
+        user.setEnabled(!user.isEnabled());
+        userManager.updateUser(user);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping("/api/users/changeRole")
+    public ResponseEntity switchEnabledState(@RequestBody ChangeUserRoleDto request, @RequestParam(value = "tokenId", required = true) String tokenId) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            return unAuthorizedResponse();
+        }
+        if (!this.isAccessAllowed(tokenId)) {
+            return forbiddenResponse();
+        }
+        if (authentication.getAuthenticatedUser(tokenId).getUser().getId() == request.getUserId()) {
+            ErrorMessageJson json = new ErrorMessageJson();
+            json.setMessage("You can't change role of your account!");
+            json.setCode(HttpStatus.CONFLICT.value());
+            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+        }
+        User user = userManager.getUserById(request.getUserId());
+        if (user == null) {
+            return notFoundResponse("User not found!");
+        }
+        UserRole userRole = userManager.getUserRoleById(request.getRole());
+        if (userRole == null) {
+            return notFoundResponse("User role not found!");
+        }
+        user.setRole(userRole);
+        user.setEnabled(!user.isEnabled());
+        userManager.updateUser(user);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

@@ -20,6 +20,11 @@ export interface UsersListDto extends JsonBase {
     users: UserInfoDto[];
 }
 
+export interface ChangeUserRoleDto extends JsonBase {
+    userId: number;
+    role: number;
+}
+
 export function GetUsersListAction(
     callback: (error?: string | object, result?: UsersListDto) => void
 ) {
@@ -40,6 +45,24 @@ export function SwitchUserEnabledStateAction(
     };
     callRestApiWithoutResult(
         Endpoint.UsersSwitchEnabledState,
+        error => {
+            callback(error);
+        },
+        data
+    );
+}
+
+export function ChangeUserRoleAction(
+    id: number,
+    role: number,
+    callback: (error?: string | object) => void
+) {
+    let data: ChangeUserRoleDto = {
+        userId: id,
+        role: role
+    };
+    callRestApiWithoutResult(
+        Endpoint.UsersChangeRole,
         error => {
             callback(error);
         },

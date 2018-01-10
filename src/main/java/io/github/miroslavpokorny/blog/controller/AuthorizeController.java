@@ -4,7 +4,7 @@ import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public abstract class AuthorizeController {
+public abstract class AuthorizeController extends BaseController {
     public ResponseEntity unAuthorizedResponse() {
         return unAuthorizedResponse("UNAUTHORIZED or low permission role!");
     }
