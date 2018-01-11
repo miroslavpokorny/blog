@@ -102,7 +102,6 @@ public class UsersController extends AuthorizeController {
             return notFoundResponse("User role not found!");
         }
         user.setRole(userRole);
-        user.setEnabled(!user.isEnabled());
         userManager.updateUser(user);
         return new ResponseEntity(HttpStatus.OK);
     }
