@@ -1,22 +1,29 @@
-import * as React from 'react';
-import MainNavigation from '../components/MainNavigation';
-import { RouteComponentProps } from 'react-router';
-import PageHelper from '../helpers/PageHelper';
-import { UserRole } from '../api/UserRole';
-import { CategoryListDto, GetCategoriesListAction, AddCategoryAction, RemoveCategoryAction, EditCategoryAction } from '../api/CategoryControllerApi';
-import { Alert, Table, Button, Modal, FormGroup, ControlLabel, FormControl, ButtonToolbar } from 'react-bootstrap';
-import { State } from '../BlogAdminStore';
-import LoadingOverlay from '../components/LoadingOverlay';
-import { Validation } from '../helpers/ValidationHelper';
-import { RouteName } from '../Router';
+import * as React from "react";
+import MainNavigation from "../components/MainNavigation";
+import { RouteComponentProps } from "react-router";
+import PageHelper from "../helpers/PageHelper";
+import { UserRole } from "../api/UserRole";
+import {
+    CategoryListDto,
+    GetCategoriesListAction,
+    AddCategoryAction,
+    RemoveCategoryAction,
+    EditCategoryAction
+} from "../api/CategoryControllerApi";
+import { Alert, Table, Button, Modal, FormGroup, ControlLabel, FormControl, ButtonToolbar } from "react-bootstrap";
+import { State } from "../BlogAdminStore";
+import LoadingOverlay from "../components/LoadingOverlay";
+import { Validation } from "../helpers/ValidationHelper";
+import { RouteName } from "../Router";
+import { observer } from "mobx-react";
 
 interface CategoryPageParams {
     action?: string;
 }
 
-interface PageProps extends RouteComponentProps<CategoryPageParams> {
-}
+interface PageProps extends RouteComponentProps<CategoryPageParams> {}
 
+@observer
 export default class CategoryPage extends React.Component<PageProps> {
     state: {
         categoriesList?: CategoryListDto;
@@ -31,7 +38,7 @@ export default class CategoryPage extends React.Component<PageProps> {
     };
 
     private _isMounted: boolean = false;
-  
+
     constructor(props: PageProps) {
         super(props);
         this.state = {
@@ -55,15 +62,15 @@ export default class CategoryPage extends React.Component<PageProps> {
     componentWillUnmount() {
         this._isMounted = false;
     }
-    
+
     render() {
-        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.Moderator, this.props.location.pathname, () => { 
+        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.Moderator, this.props.location.pathname, () => {
             return (
                 <div>
                     <MainNavigation pathName={this.props.location.pathname} />
                     <div className="container">
                         {!this.props.match.params.action && this.renderDefault()}
-                        {this.props.match.params.action === 'add' && this.renderAddCategory()}
+                        {this.props.match.params.action === "add" && this.renderAddCategory()}
                     </div>
                 </div>
             );
@@ -75,9 +82,13 @@ export default class CategoryPage extends React.Component<PageProps> {
             <div className="container">
                 <h2>Categories</h2>
                 <ButtonToolbar>
-                    <Button bsStyle="primary" bsSize="large" onClick={() => {
-                        State.mainNavigation.redirectLink = RouteName.categoryAdd;
-                    }}>
+                    <Button
+                        bsStyle="primary"
+                        bsSize="large"
+                        onClick={() => {
+                            State.mainNavigation.redirectLink = RouteName.categoryAdd;
+                        }}
+                    >
                         Add category
                     </Button>
                 </ButtonToolbar>
@@ -89,9 +100,9 @@ export default class CategoryPage extends React.Component<PageProps> {
                     this.state.successMessage.trim().length !== 0 && (
                         <Alert bsStyle="success">{this.state.successMessage}</Alert>
                     )}
-                {(this.state.categoriesList === undefined || this.state.categoriesList.categories === undefined || this.state.categoriesList.categories.length === 0) && (
-                    <p>No data to display</p>
-                )}
+                {(this.state.categoriesList === undefined ||
+                    this.state.categoriesList.categories === undefined ||
+                    this.state.categoriesList.categories.length === 0) && <p>No data to display</p>}
                 {this.state.categoriesList !== undefined &&
                     this.state.categoriesList.categories !== undefined &&
                     this.state.categoriesList.categories.length > 0 && (
@@ -110,10 +121,7 @@ export default class CategoryPage extends React.Component<PageProps> {
                                             <td>{item.name}</td>
                                             <td>{item.description}</td>
                                             <td>
-                                                <Button
-                                                    bsStyle="danger"
-                                                    onClick={() => this.removeCategory(item.id)}
-                                                >
+                                                <Button bsStyle="danger" onClick={() => this.removeCategory(item.id)}>
                                                     Remove
                                                 </Button>
                                                 <Button
@@ -144,7 +152,14 @@ export default class CategoryPage extends React.Component<PageProps> {
                             </Modal.Header>
 
                             <Modal.Body>
-                                <FormGroup controlId="formControlName"  validationState={Validation.notEmpty(this.state.selectedCategoryName !== undefined ? this.state.selectedCategoryName : "").toString()}>
+                                <FormGroup
+                                    controlId="formControlName"
+                                    validationState={Validation.notEmpty(
+                                        this.state.selectedCategoryName !== undefined
+                                            ? this.state.selectedCategoryName
+                                            : ""
+                                    ).toString()}
+                                >
                                     <ControlLabel>Name</ControlLabel>
                                     <FormControl
                                         type="text"
@@ -166,7 +181,7 @@ export default class CategoryPage extends React.Component<PageProps> {
                                             this.setState({
                                                 selectedCategory: {
                                                     description: (event.target as HTMLInputElement).value
-                                                } 
+                                                }
                                             });
                                         }}
                                         value={this.state.selectedCategoryDescription}
@@ -186,8 +201,20 @@ export default class CategoryPage extends React.Component<PageProps> {
                                     bsStyle="primary"
                                     onClick={() => {
                                         if (this.state.selectedCategoryId !== undefined) {
-                                            if (Validation.notEmpty(this.state.selectedCategoryName !== undefined ? this.state.selectedCategoryName : "").isValid()) {
-                                                this.editCategory(this.state.selectedCategoryId, this.state.selectedCategoryName as string, this.state.selectedCategoryDescription !== undefined ? this.state.selectedCategoryDescription : "");
+                                            if (
+                                                Validation.notEmpty(
+                                                    this.state.selectedCategoryName !== undefined
+                                                        ? this.state.selectedCategoryName
+                                                        : ""
+                                                ).isValid()
+                                            ) {
+                                                this.editCategory(
+                                                    this.state.selectedCategoryId,
+                                                    this.state.selectedCategoryName as string,
+                                                    this.state.selectedCategoryDescription !== undefined
+                                                        ? this.state.selectedCategoryDescription
+                                                        : ""
+                                                );
                                             }
                                         }
                                         this.setState({ showModalEdit: false });
@@ -208,64 +235,72 @@ export default class CategoryPage extends React.Component<PageProps> {
             <div>
                 {this.renderDefault()}
                 <div className="static-modal">
-                        <Modal.Dialog>
-                            <Modal.Header>
-                                <Modal.Title>Add category</Modal.Title>
-                            </Modal.Header>
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title>Add category</Modal.Title>
+                        </Modal.Header>
 
-                            <Modal.Body>
-                                <FormGroup controlId="formControlName" validationState={Validation.notEmpty(this.state.addCategoryName).toString()}>
-                                    <ControlLabel>Name</ControlLabel>
-                                    <FormControl
-                                        type="text"
-                                        placeholder="Name"
-                                        onChange={event => {
-                                            this.setState({
-                                                addCategoryName: (event.target as HTMLInputElement).value
-                                            });
-                                        }}
-                                        value={this.state.addCategoryName}
-                                    />
-                                </FormGroup>
-                                <FormGroup controlId="formControlDescription">
-                                    <ControlLabel>Description</ControlLabel>
-                                    <FormControl
-                                        type="text"
-                                        placeholder="Name"
-                                        onChange={event => {
-                                            this.setState({
-                                                addCategoryDescription: (event.target as HTMLInputElement).value
-                                            });
-                                        }}
-                                        value={this.state.addCategoryDescription}
-                                    />
-                                </FormGroup>
-                            </Modal.Body>
+                        <Modal.Body>
+                            <FormGroup
+                                controlId="formControlName"
+                                validationState={Validation.notEmpty(this.state.addCategoryName).toString()}
+                            >
+                                <ControlLabel>Name</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    placeholder="Name"
+                                    onChange={event => {
+                                        this.setState({
+                                            addCategoryName: (event.target as HTMLInputElement).value
+                                        });
+                                    }}
+                                    value={this.state.addCategoryName}
+                                />
+                            </FormGroup>
+                            <FormGroup controlId="formControlDescription">
+                                <ControlLabel>Description</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    placeholder="Name"
+                                    onChange={event => {
+                                        this.setState({
+                                            addCategoryDescription: (event.target as HTMLInputElement).value
+                                        });
+                                    }}
+                                    value={this.state.addCategoryDescription}
+                                />
+                            </FormGroup>
+                        </Modal.Body>
 
-                            <Modal.Footer>
-                                <Button
-                                    onClick={() => {
-                                        this.setState({ addCategoryName: "", addCategoryDescription: ""});
+                        <Modal.Footer>
+                            <Button
+                                onClick={() => {
+                                    this.setState({ addCategoryName: "", addCategoryDescription: "" });
+                                    State.mainNavigation.redirectLink = RouteName.category;
+                                }}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                bsStyle="primary"
+                                onClick={() => {
+                                    if (Validation.notEmpty(this.state.addCategoryName).isValid()) {
+                                        this.addCategory(
+                                            this.state.addCategoryName,
+                                            this.state.addCategoryDescription !== undefined
+                                                ? this.state.addCategoryDescription
+                                                : ""
+                                        );
+                                        this.setState({ addCategoryName: "", addCategoryDescription: "" });
                                         State.mainNavigation.redirectLink = RouteName.category;
-                                    }}
-                                >
-                                    Close
-                                </Button>
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={() => {
-                                        if (Validation.notEmpty(this.state.addCategoryName).isValid()) {
-                                            this.addCategory(this.state.addCategoryName, this.state.addCategoryDescription !== undefined ? this.state.addCategoryDescription : "");
-                                            this.setState({ addCategoryName: "", addCategoryDescription: ""});
-                                            State.mainNavigation.redirectLink = RouteName.category;
-                                        }
-                                    }}
-                                >
-                                    Add category
-                                </Button>
-                            </Modal.Footer>
-                        </Modal.Dialog>
-                    </div>
+                                    }
+                                }}
+                            >
+                                Add category
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </div>
             </div>
         );
     }
@@ -305,7 +340,7 @@ export default class CategoryPage extends React.Component<PageProps> {
             if (error !== undefined) {
                 return this.handleError(error);
             }
-            this.setState({ errorMessage: undefined, successMessage: "Category was added!"});
+            this.setState({ errorMessage: undefined, successMessage: "Category was added!" });
             this.loadCategories();
         });
     }
@@ -315,7 +350,7 @@ export default class CategoryPage extends React.Component<PageProps> {
             if (error !== undefined) {
                 return this.handleError(error);
             }
-            this.setState({ errorMessage: undefined, successMessage: "Category was successfully edited!"});
+            this.setState({ errorMessage: undefined, successMessage: "Category was successfully edited!" });
             this.loadCategories();
         });
     }

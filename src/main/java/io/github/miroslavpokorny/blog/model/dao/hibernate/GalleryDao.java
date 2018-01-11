@@ -9,10 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Repository
@@ -31,8 +28,8 @@ public class GalleryDao extends DaoBase<Gallery> implements io.github.miroslavpo
             ParameterExpression<User> userExpression = criteriaBuilder.parameter(User.class);
             CriteriaQuery<Gallery> criteriaQuery = criteriaBuilder.createQuery(Gallery.class);
             Root<Gallery> from = criteriaQuery.from(Gallery.class);
-            from.fetch("author");
-            criteriaQuery.where(criteriaBuilder.equal(from.get("author"), userExpression));
+            from.fetch("Author");
+            criteriaQuery.where(criteriaBuilder.equal(from.get("Author"), userExpression));
             Query<Gallery> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(userExpression, userDao.loadById(id));
             return query.getResultList();
@@ -45,7 +42,7 @@ public class GalleryDao extends DaoBase<Gallery> implements io.github.miroslavpo
             CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
             CriteriaQuery<Gallery> criteriaQuery = criteriaBuilder.createQuery(Gallery.class);
             Root<Gallery> from = criteriaQuery.from(Gallery.class);
-            from.fetch("author");
+            from.fetch("Author");
             Query<Gallery> query = session.delegate().createQuery(criteriaQuery);
             return query.getResultList();
         }
@@ -58,7 +55,8 @@ public class GalleryDao extends DaoBase<Gallery> implements io.github.miroslavpo
             ParameterExpression<Integer> galleryIdExpression = criteriaBuilder.parameter(Integer.class);
             CriteriaQuery<Gallery> criteriaQuery = criteriaBuilder.createQuery(Gallery.class);
             Root<Gallery> from = criteriaQuery.from(Gallery.class);
-            from.fetch("author");
+            from.fetch("Author");
+            criteriaQuery.where(criteriaBuilder.equal(from.get("id"), galleryIdExpression));
             Query<Gallery> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(galleryIdExpression, id);
             return query.getSingleResult();

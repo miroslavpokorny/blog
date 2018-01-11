@@ -1,24 +1,25 @@
-import { observable } from 'mobx';
-import { LoggedUser } from './api/SignControllerApi';
+import { observable } from "mobx";
+import { LoggedUser } from "./api/SignControllerApi";
 
 export interface MainNavigation {
     currentLink?: string;
     redirectLink?: string;
     redirectAfterSignIn?: string;
+    redirectId?: number;
 }
 
 export class BlogAdminStore {
-    @observable 
+    @observable
     mainNavigation: MainNavigation = {
         currentLink: undefined,
         redirectLink: undefined,
-        redirectAfterSignIn: undefined
+        redirectAfterSignIn: undefined,
+        redirectId: undefined
     };
 
-    @observable
-    isLoading: boolean = false;
+    @observable isLoading: boolean = false;
 
-    endpoint: string = '';
+    endpoint: string = "";
 
     @observable
     loggedUser: LoggedUser = {

@@ -16,4 +16,12 @@ export enum Endpoint {
     ArticleEdit = "/api/article/edit",
     ArticleRemove = "/api/article/remove",
     ArticleList = "/api/article/list",
+    GalleryList = "/api/gallery/list",
+    GalleryAdd = "/api/gallery/add",
+    GalleryRemove = "/api/gallery/remove",
+    GalleryEdit = "/api/gallery/edit",
+    GalleryItemList = "/api/gallery/itemList",
+    GalleryItemAdd = "/api/gallery/itemAdd",
+    GalleryItemRemove = "/api/gallery/itemRemove",
+    GalleryItemEdit = "/api/gallery/itemEdit"
 }

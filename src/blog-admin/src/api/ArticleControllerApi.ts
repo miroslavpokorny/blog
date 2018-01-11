@@ -29,5 +29,3 @@ export interface AddArticleDto extends JsonBase {
 export interface ArticleListDto extends JsonBase {
     articles: ArticleDto[];
 }
-
-
