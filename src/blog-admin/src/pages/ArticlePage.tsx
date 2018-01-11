@@ -15,7 +15,7 @@ interface PageProps extends RouteComponentProps<ArticlePageParams> {
 
 export default class ArticlePage extends React.Component<PageProps> {
     render() {
-        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.User, this.props.location.pathname, () => { 
+        return PageHelper.hasUserRightToAccessOrRedirect(UserRole.Editor, this.props.location.pathname, () => { 
             return (
                 <div>
                     <MainNavigation pathName={this.props.location.pathname} />

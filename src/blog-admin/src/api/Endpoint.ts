@@ -12,4 +12,8 @@ export enum Endpoint {
     CategoryAdd = "/api/category/add",
     CategoryRemove = "/api/category/remove",
     CategoryEdit = "/api/category/edit",
+    ArticleAdd = "/api/article/add",
+    ArticleEdit = "/api/article/edit",
+    ArticleRemove = "/api/article/remove",
+    ArticleList = "/api/article/list",
 }
