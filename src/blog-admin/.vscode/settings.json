@@ -4,5 +4,6 @@
         "Unmount",
         "datejs",
         "mobx"
-    ]
+    ],
+    "editor.formatOnSave": true
 }
