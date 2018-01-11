@@ -4,25 +4,19 @@ import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.error.EmailAlreadyExistsException;
 import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
-import io.github.miroslavpokorny.blog.model.helper.GsonHelper;
 import io.github.miroslavpokorny.blog.model.helper.validation.Validator;
 import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
 import io.github.miroslavpokorny.blog.model.json.LoggedUserJson;
 import io.github.miroslavpokorny.blog.model.json.SignInCredentialsJson;
 import io.github.miroslavpokorny.blog.model.json.SignUpDataJson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-public class SignController{
+public class SignController extends BaseController{
     private final Authentication authentication;
 
     @Autowired
@@ -88,10 +82,7 @@ public class SignController{
         try {
             authentication.createUser(signUpData.getNickname(), signUpData.getEmail(), signUpData.getPassword(), signUpData.getSurname(), signUpData.getName());
         } catch (NicknameAlreadyExistsException | EmailAlreadyExistsException exception) {
-            ErrorMessageJson json = new ErrorMessageJson();
-            json.setCode(HttpStatus.CONFLICT.value());
-            json.setMessage(exception.getMessage());
-            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+            return conflictResponse(exception.getMessage());
         }
         String newTokenId = authentication.createAuthentication(signUpData.getEmail(), signUpData.getPassword());
         if (newTokenId != null) {

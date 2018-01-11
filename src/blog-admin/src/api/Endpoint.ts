@@ -7,5 +7,9 @@ export enum Endpoint {
     ProfileEdit = "/api/profile/edit",
     UsersList = "/api/users/list",
     UsersSwitchEnabledState = "/api/users/switchEnabledState",
-    UsersChangeRole = "/api/users/changeRole"
+    UsersChangeRole = "/api/users/changeRole",
+    CategoryList = "/api/category/list",
+    CategoryAdd = "/api/category/add",
+    CategoryRemove = "/api/category/remove",
+    CategoryEdit = "/api/category/edit",
 }

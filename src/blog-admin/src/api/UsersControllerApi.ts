@@ -28,11 +28,11 @@ export interface ChangeUserRoleDto extends JsonBase {
 export function GetUsersListAction(
     callback: (error?: string | object, result?: UsersListDto) => void
 ) {
-    callRestApiWithResult(Endpoint.UsersList, (error, result) => {
+    callRestApiWithResult<UsersListDto>(Endpoint.UsersList, (error, result) => {
         if (error !== undefined) {
             return callback(error, undefined);
         }
-        return callback(undefined, result as UsersListDto);
+        return callback(undefined, result);
     });
 }
 

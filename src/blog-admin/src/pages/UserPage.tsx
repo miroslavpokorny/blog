@@ -10,7 +10,6 @@ import { Table, Modal, FormGroup, ControlLabel, FormControl } from "react-bootst
 import * as Button from "react-bootstrap/lib/Button";
 import LoadingOverlay from "../components/LoadingOverlay";
 import { State } from "../BlogAdminStore";
-// import { State } from '../BlogAdminStore';
 
 interface UserPageParams {
     action?: string;
@@ -41,7 +40,7 @@ export default class UserPage extends React.Component<PageProps> {
             selectedUserId: undefined,
             selectedRole: undefined
         };
-        setTimeout(() => this.loadUsers(), 0); // this.loadUsers();
+        setTimeout(() => this.loadUsers(), 0);
     }
 
     componentDidMount() {

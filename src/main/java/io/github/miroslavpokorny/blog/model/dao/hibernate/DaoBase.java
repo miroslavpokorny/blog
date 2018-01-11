@@ -111,7 +111,6 @@ abstract public class DaoBase<T> implements Dao<T> {
     @Override
     public void delete(T entity) {
         try (CloseableSession session = HibernateHelper.getSession()) {
-            session.delegate().flush();
             try {
                 session.delegate().getTransaction().begin();
                 session.delegate().delete(entity);

@@ -53,10 +53,7 @@ public class ProfileController extends AuthorizeController {
         try {
             userManager.updateUser(user);
         } catch (NicknameAlreadyExistsException exception) {
-            ErrorMessageJson json = new ErrorMessageJson();
-            json.setCode(HttpStatus.CONFLICT.value());
-            json.setMessage(exception.getMessage());
-            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+            return conflictResponse(exception.getMessage());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

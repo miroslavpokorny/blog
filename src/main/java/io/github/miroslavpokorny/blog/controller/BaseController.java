@@ -15,4 +15,15 @@ public abstract class BaseController {
     public ResponseEntity notFoundResponse() {
         return notFoundResponse("Not found!");
     }
+
+    public ResponseEntity conflictResponse(String message) {
+        ErrorMessageJson json = new ErrorMessageJson();
+        json.setMessage(message);
+        json.setCode(HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+    }
+
+    public ResponseEntity conflictResponse() {
+        return conflictResponse("Conflict!");
+    }
 }
