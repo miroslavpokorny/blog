@@ -4,7 +4,7 @@ import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.UserRole;
-import io.github.miroslavpokorny.blog.model.json.*;
+import io.github.miroslavpokorny.blog.model.dto.*;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +57,7 @@ public class UsersController extends AuthorizeController {
     }
 
     @RequestMapping("/api/users/switchEnabledState")
-    public ResponseEntity switchEnabledState(@RequestBody RequestByIdJson request, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity switchEnabledState(@RequestBody RequestByIdDto request, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }
@@ -65,7 +65,7 @@ public class UsersController extends AuthorizeController {
             return forbiddenResponse();
         }
         if (authentication.getAuthenticatedUser(tokenId).getUser().getId() == request.getId()) {
-            ErrorMessageJson json = new ErrorMessageJson();
+            ErrorMessageDto json = new ErrorMessageDto();
             json.setMessage("You can't disable your account!");
             json.setCode(HttpStatus.CONFLICT.value());
             return new ResponseEntity<>(json, HttpStatus.CONFLICT);
@@ -88,7 +88,7 @@ public class UsersController extends AuthorizeController {
             return forbiddenResponse();
         }
         if (authentication.getAuthenticatedUser(tokenId).getUser().getId() == request.getUserId()) {
-            ErrorMessageJson json = new ErrorMessageJson();
+            ErrorMessageDto json = new ErrorMessageDto();
             json.setMessage("You can't change role of your account!");
             json.setCode(HttpStatus.CONFLICT.value());
             return new ResponseEntity<>(json, HttpStatus.CONFLICT);

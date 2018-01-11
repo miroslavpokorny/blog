@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class ErrorMessageJson extends JsonBase {
+public class ErrorMessageDto extends DtoBase {
     private int code;
     private String message;
 

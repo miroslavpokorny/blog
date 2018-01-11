@@ -1,4 +1,4 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
 public class CategoryDto {
     private int id;

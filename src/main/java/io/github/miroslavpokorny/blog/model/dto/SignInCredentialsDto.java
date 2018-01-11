@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class SignInCredentialsJson {
+public class SignInCredentialsDto extends DtoBase {
     private String email;
     private String password;
 

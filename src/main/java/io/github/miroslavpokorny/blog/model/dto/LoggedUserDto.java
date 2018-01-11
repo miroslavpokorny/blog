@@ -1,8 +1,8 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
 import java.util.Date;
 
-public class LoggedUserJson extends JsonBase {
+public class LoggedUserDto extends DtoBase {
     private int id;
     private Date lastSignInDate;
     private int role;

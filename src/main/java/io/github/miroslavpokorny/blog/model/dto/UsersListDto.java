@@ -1,8 +1,8 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
 import java.util.List;
 
-public class UsersListDto extends JsonBase {
+public class UsersListDto extends DtoBase {
     private List<UserInfoDto> users;
 
     public List<UserInfoDto> getUsers() {

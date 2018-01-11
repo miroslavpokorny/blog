@@ -1,29 +1,24 @@
-import { JsonBase } from "./JsonBase";
-import {
-    callRestApiWithResult,
-    callRestApiWithoutResult
-} from "./RestApiCalls";
+import { DtoBase } from "./DtoBase";
+import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
-import { RequestId } from "./RequestId";
+import { RequestByIdDto } from "./RequestId";
 
-export interface CategoryDto extends JsonBase {
+export interface CategoryDto extends DtoBase {
     name: string;
     description: string;
     id: number;
 }
 
-export interface AddCategoryDto extends JsonBase {
+export interface AddCategoryDto extends DtoBase {
     name: string;
     description: string;
 }
 
-export interface CategoryListDto extends JsonBase {
+export interface CategoryListDto extends DtoBase {
     categories: CategoryDto[];
 }
 
-export function GetCategoriesListAction(
-    callback: (error?: string | object, result?: CategoryListDto) => void
-) {
+export function GetCategoriesListAction(callback: (error?: string | object, result?: CategoryListDto) => void) {
     callRestApiWithResult<CategoryListDto>(Endpoint.CategoryList, (error, result) => {
         if (error !== undefined) {
             return callback(error, undefined);
@@ -32,11 +27,7 @@ export function GetCategoriesListAction(
     });
 }
 
-export function AddCategoryAction(
-    name: string,
-    description: string,
-    callback: (error?: string | object) => void
-) {
+export function AddCategoryAction(name: string, description: string, callback: (error?: string | object) => void) {
     const data: AddCategoryDto = {
         name: name,
         description: description
@@ -50,11 +41,8 @@ export function AddCategoryAction(
     );
 }
 
-export function RemoveCategoryAction(
-    id: number,
-    callback: (error?: string | object) => void
-) {
-    const data: RequestId = {
+export function RemoveCategoryAction(id: number, callback: (error?: string | object) => void) {
+    const data: RequestByIdDto = {
         id: id
     };
     callRestApiWithoutResult(
@@ -66,17 +54,22 @@ export function RemoveCategoryAction(
     );
 }
 
-export function EditCategoryAction(id: number, name: string, description: string, callback: (error?: string | object) => void) {
+export function EditCategoryAction(
+    id: number,
+    name: string,
+    description: string,
+    callback: (error?: string | object) => void
+) {
     const data: CategoryDto = {
         id: id,
         name: name,
         description: description
     };
     callRestApiWithoutResult(
-        Endpoint.CategoryEdit, 
+        Endpoint.CategoryEdit,
         error => {
             callback(error);
-        }, 
+        },
         data
     );
 }

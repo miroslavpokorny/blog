@@ -5,7 +5,7 @@ import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.Gallery;
 import io.github.miroslavpokorny.blog.model.GalleryItem;
 import io.github.miroslavpokorny.blog.model.User;
-import io.github.miroslavpokorny.blog.model.json.*;
+import io.github.miroslavpokorny.blog.model.dto.*;
 import io.github.miroslavpokorny.blog.model.manager.GalleryManager;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/gallery/itemList")
-    public ResponseEntity getGalleryItemsList(@RequestBody RequestByIdJson galleryId, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity getGalleryItemsList(@RequestBody RequestByIdDto galleryId, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }
@@ -100,7 +100,7 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/gallery/remove")
-    public ResponseEntity removeGallery(@RequestBody RequestByIdJson galleryId, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity removeGallery(@RequestBody RequestByIdDto galleryId, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }
@@ -137,7 +137,7 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/gallery/itemRemove")
-    public ResponseEntity removeGalleryItem(@RequestBody RequestByIdJson galleryItemId, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity removeGalleryItem(@RequestBody RequestByIdDto galleryItemId, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }

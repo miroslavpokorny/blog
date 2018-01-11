@@ -1,8 +1,8 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
 import java.util.List;
 
-public class GalleryListDto extends JsonBase {
+public class GalleryListDto extends DtoBase {
     private List<GalleryDto> galleries;
 
     public List<GalleryDto> getGalleries() {

@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class GalleryItemDto extends JsonBase {
+public class GalleryItemDto extends DtoBase {
     private int id;
     private String imageName;
     private String title;

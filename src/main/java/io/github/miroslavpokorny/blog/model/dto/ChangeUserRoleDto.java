@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class ChangeUserRoleDto extends JsonBase {
+public class ChangeUserRoleDto extends DtoBase {
     private int role;
     private int userId;
 

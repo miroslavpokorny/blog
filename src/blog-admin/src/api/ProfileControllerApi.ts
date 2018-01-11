@@ -1,23 +1,17 @@
-import {
-    callRestApiWithResult,
-    callRestApiWithoutResult
-} from "./RestApiCalls";
+import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
-import { JsonBase } from "./JsonBase";
-import { RequestId } from "./RequestId";
+import { DtoBase } from "./DtoBase";
+import { RequestByIdDto } from "./RequestId";
 
-export interface ProfileInfo extends JsonBase {
+export interface ProfileInfo extends DtoBase {
     name?: string;
     surname?: string;
     nickname: string;
     id: number;
 }
 
-export function LoadProfileAction(
-    id: number,
-    callback: (error?: string | object, result?: ProfileInfo) => void
-) {
-    const data: RequestId = {
+export function LoadProfileAction(id: number, callback: (error?: string | object, result?: ProfileInfo) => void) {
+    const data: RequestByIdDto = {
         id: id
     };
     callRestApiWithResult<ProfileInfo>(

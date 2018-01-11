@@ -1,8 +1,9 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class AddCategoryDto extends JsonBase {
+public class AddGalleryDto extends DtoBase {
     private String name;
     private String description;
+    private int authorId;
 
     public String getName() {
         return name;
@@ -18,5 +19,13 @@ public class AddCategoryDto extends JsonBase {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 }

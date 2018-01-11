@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class SignUpDataJson {
+public class SignUpDataDto {
     private String email;
     private String nickname;
     private String password;

@@ -1,3 +1,3 @@
-export interface RequestId {
+export interface RequestByIdDto {
     id: number;
 }

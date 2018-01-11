@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class UserInfoDto extends JsonBase {
+public class UserInfoDto extends DtoBase {
     private String name;
     private String surname;
     private String nickname;

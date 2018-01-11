@@ -1,12 +1,12 @@
 package io.github.miroslavpokorny.blog.controller;
 
-import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
+import io.github.miroslavpokorny.blog.model.dto.ErrorMessageDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public abstract class BaseController {
     public ResponseEntity notFoundResponse(String message) {
-        ErrorMessageJson json = new ErrorMessageJson();
+        ErrorMessageDto json = new ErrorMessageDto();
         json.setMessage(message);
         json.setCode(HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(json, HttpStatus.NOT_FOUND);
@@ -17,7 +17,7 @@ public abstract class BaseController {
     }
 
     public ResponseEntity conflictResponse(String message) {
-        ErrorMessageJson json = new ErrorMessageJson();
+        ErrorMessageDto json = new ErrorMessageDto();
         json.setMessage(message);
         json.setCode(HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(json, HttpStatus.CONFLICT);

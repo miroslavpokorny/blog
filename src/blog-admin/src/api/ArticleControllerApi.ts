@@ -1,13 +1,10 @@
-import { JsonBase } from "./JsonBase";
-import {
-    callRestApiWithResult,
-    callRestApiWithoutResult
-} from "./RestApiCalls";
+import { DtoBase } from "./DtoBase";
+import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
-import { RequestId } from "./RequestId";
+import { RequestByIdDto } from "./RequestId";
 import { UserInfoDto } from "./UsersControllerApi";
 
-export interface ArticleDto extends JsonBase {
+export interface ArticleDto extends DtoBase {
     id: number;
     name: string;
     previewImage: string;
@@ -17,7 +14,7 @@ export interface ArticleDto extends JsonBase {
     galleryId?: number;
 }
 
-export interface AddArticleDto extends JsonBase {
+export interface AddArticleDto extends DtoBase {
     name: string;
     previewImage: string;
     content: string;
@@ -26,6 +23,6 @@ export interface AddArticleDto extends JsonBase {
     galleryId?: number;
 }
 
-export interface ArticleListDto extends JsonBase {
+export interface ArticleListDto extends DtoBase {
     articles: ArticleDto[];
 }

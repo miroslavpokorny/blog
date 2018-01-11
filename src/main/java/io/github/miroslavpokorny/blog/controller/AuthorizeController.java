@@ -1,6 +1,6 @@
 package io.github.miroslavpokorny.blog.controller;
 
-import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
+import io.github.miroslavpokorny.blog.model.dto.ErrorMessageDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -10,7 +10,7 @@ public abstract class AuthorizeController extends BaseController {
     }
 
     public ResponseEntity unAuthorizedResponse(String message) {
-        ErrorMessageJson json = new ErrorMessageJson();
+        ErrorMessageDto json = new ErrorMessageDto();
         json.setCode(HttpStatus.UNAUTHORIZED.value());
         json.setMessage(message);
         return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
@@ -21,7 +21,7 @@ public abstract class AuthorizeController extends BaseController {
     }
 
     public ResponseEntity forbiddenResponse(String message) {
-        ErrorMessageJson json = new ErrorMessageJson();
+        ErrorMessageDto json = new ErrorMessageDto();
         json.setCode(HttpStatus.FORBIDDEN.value());
         json.setMessage(message);
         return new ResponseEntity<>(json, HttpStatus.FORBIDDEN);

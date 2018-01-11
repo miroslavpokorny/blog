@@ -3,10 +3,9 @@ package io.github.miroslavpokorny.blog.controller;
 import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.User;
+import io.github.miroslavpokorny.blog.model.dto.ProfileInfoDto;
 import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
-import io.github.miroslavpokorny.blog.model.json.ErrorMessageJson;
-import io.github.miroslavpokorny.blog.model.json.ProfileInfoJson;
-import io.github.miroslavpokorny.blog.model.json.RequestByIdJson;
+import io.github.miroslavpokorny.blog.model.dto.RequestByIdDto;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +27,12 @@ public class ProfileController extends AuthorizeController {
     }
 
     @RequestMapping("/api/profile/load")
-    public ResponseEntity loadProfile(@RequestBody RequestByIdJson request, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity loadProfile(@RequestBody RequestByIdDto request, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!isAccessAllowed(tokenId, request.getId())) {
             return unAuthorizedResponse();
         }
         User user = userManager.getUserById(request.getId());
-        ProfileInfoJson json = new ProfileInfoJson();
+        ProfileInfoDto json = new ProfileInfoDto();
         json.setId(user.getId());
         json.setName(user.getName());
         json.setSurname(user.getSurname());
@@ -42,7 +41,7 @@ public class ProfileController extends AuthorizeController {
     }
 
     @RequestMapping("/api/profile/edit")
-    public ResponseEntity editProfile(@RequestBody ProfileInfoJson profile, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity editProfile(@RequestBody ProfileInfoDto profile, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!isAccessAllowed(tokenId, profile.getId())) {
             return unAuthorizedResponse();
         }

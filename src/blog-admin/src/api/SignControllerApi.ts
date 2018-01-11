@@ -1,10 +1,10 @@
-import { State } from '../BlogAdminStore';
-import { Endpoint } from './Endpoint';
-import { callRestApiWithResult, callRestApiWithoutResult } from './RestApiCalls';
-import { JsonBase } from './JsonBase';
-import 'datejs';
+import { State } from "../BlogAdminStore";
+import { Endpoint } from "./Endpoint";
+import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
+import { DtoBase } from "./DtoBase";
+import "datejs";
 
-export interface LoggedUser extends JsonBase {
+export interface LoggedUser extends DtoBase {
     id?: number;
     lastSignInDate?: Date;
     role?: number;
@@ -31,23 +31,23 @@ export function SignInAction(email: string, password: string, callback: (error?:
         password: password
     };
     callRestApiWithResult<LoggedUser>(
-        Endpoint.SignIn, 
+        Endpoint.SignIn,
         (error, result) => {
             if (error !== undefined) {
                 return callback(error);
             }
             if (result === undefined) {
-                return callback('Server return corrupted data!');
+                return callback("Server return corrupted data!");
             }
             setLoggedUserState(result);
             return callback();
-        }, 
+        },
         data
     );
 }
 
 export function SignOutAction(callback: (error?: string | object) => void) {
-    callRestApiWithoutResult(Endpoint.SignOut, (error) => {
+    callRestApiWithoutResult(Endpoint.SignOut, error => {
         if (error !== undefined) {
             return callback(error);
         }
@@ -57,8 +57,34 @@ export function SignOutAction(callback: (error?: string | object) => void) {
 }
 
 export function GetLoggedUserAction(callback: (error?: string | object) => void) {
+    callRestApiWithResult<LoggedUser>(Endpoint.GetLoggedUser, (error, result) => {
+        if (error !== undefined) {
+            return callback(error);
+        }
+        if (result !== undefined) {
+            setLoggedUserState(result);
+        }
+        return callback();
+    });
+}
+
+export function SignUpAction(
+    email: string,
+    nickname: string,
+    password: string,
+    name: string,
+    surname: string,
+    callback: (error?: string | object) => void
+) {
+    const data: SignUpData = {
+        email: email,
+        nickname: nickname,
+        password: password,
+        name: name,
+        surname: surname
+    };
     callRestApiWithResult<LoggedUser>(
-        Endpoint.GetLoggedUser,
+        Endpoint.SignUp,
         (error, result) => {
             if (error !== undefined) {
                 return callback(error);
@@ -67,37 +93,9 @@ export function GetLoggedUserAction(callback: (error?: string | object) => void)
                 setLoggedUserState(result);
             }
             return callback();
-        }
+        },
+        data
     );
-}
-
-export function SignUpAction(
-    email: string, 
-    nickname: string, 
-    password: string, 
-    name: string, 
-    surname: string, 
-    callback: (error?: string | object) => void) {
-        const data: SignUpData = {
-            email: email,
-            nickname: nickname,
-            password: password,
-            name: name,
-            surname: surname
-        };
-        callRestApiWithResult<LoggedUser>(
-            Endpoint.SignUp,
-            (error, result) => {
-                if (error !== undefined) {
-                    return callback(error);
-                }
-                if (result !== undefined) {
-                    setLoggedUserState(result);
-                }
-                return callback();
-            },
-            data
-        );
 }
 
 function setLoggedUserState(loggedUser: LoggedUser) {

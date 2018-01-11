@@ -1,6 +1,6 @@
-package io.github.miroslavpokorny.blog.model.json;
+package io.github.miroslavpokorny.blog.model.dto;
 
-public class RequestByIdJson extends JsonBase {
+public class RequestByIdDto extends DtoBase {
     private int id;
 
     public int getId() {

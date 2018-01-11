@@ -4,7 +4,7 @@ import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.Category;
 import io.github.miroslavpokorny.blog.model.error.NameAlreadyExistsException;
-import io.github.miroslavpokorny.blog.model.json.*;
+import io.github.miroslavpokorny.blog.model.dto.*;
 import io.github.miroslavpokorny.blog.model.manager.CategoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +67,7 @@ public class CategoryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/category/remove")
-    public ResponseEntity addCategory(@RequestBody RequestByIdJson requestById, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity addCategory(@RequestBody RequestByIdDto requestById, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }

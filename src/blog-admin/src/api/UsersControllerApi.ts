@@ -1,10 +1,7 @@
-import { JsonBase } from "./JsonBase";
-import {
-    callRestApiWithResult,
-    callRestApiWithoutResult
-} from "./RestApiCalls";
+import { DtoBase } from "./DtoBase";
+import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
-import { RequestId } from "./RequestId";
+import { RequestByIdDto } from "./RequestId";
 
 export interface UserInfoDto {
     name: string;
@@ -16,18 +13,16 @@ export interface UserInfoDto {
     id: number;
 }
 
-export interface UsersListDto extends JsonBase {
+export interface UsersListDto extends DtoBase {
     users: UserInfoDto[];
 }
 
-export interface ChangeUserRoleDto extends JsonBase {
+export interface ChangeUserRoleDto extends DtoBase {
     userId: number;
     role: number;
 }
 
-export function GetUsersListAction(
-    callback: (error?: string | object, result?: UsersListDto) => void
-) {
+export function GetUsersListAction(callback: (error?: string | object, result?: UsersListDto) => void) {
     callRestApiWithResult<UsersListDto>(Endpoint.UsersList, (error, result) => {
         if (error !== undefined) {
             return callback(error, undefined);
@@ -36,11 +31,8 @@ export function GetUsersListAction(
     });
 }
 
-export function SwitchUserEnabledStateAction(
-    id: number,
-    callback: (error?: string | object) => void
-) {
-    let data: RequestId = {
+export function SwitchUserEnabledStateAction(id: number, callback: (error?: string | object) => void) {
+    let data: RequestByIdDto = {
         id: id
     };
     callRestApiWithoutResult(
@@ -52,11 +44,7 @@ export function SwitchUserEnabledStateAction(
     );
 }
 
-export function ChangeUserRoleAction(
-    id: number,
-    role: number,
-    callback: (error?: string | object) => void
-) {
+export function ChangeUserRoleAction(id: number, role: number, callback: (error?: string | object) => void) {
     let data: ChangeUserRoleDto = {
         userId: id,
         role: role

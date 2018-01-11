@@ -1,39 +1,39 @@
-import { JsonBase } from "./JsonBase";
+import { DtoBase } from "./DtoBase";
 import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
-import { RequestId } from "./RequestId";
+import { RequestByIdDto } from "./RequestId";
 import { UserInfoDto } from "./UsersControllerApi";
 
-export interface GalleryDto extends JsonBase {
+export interface GalleryDto extends DtoBase {
     id: number;
     name: string;
     description: string;
     author: UserInfoDto;
 }
 
-export interface AddGalleryDto extends JsonBase {
+export interface AddGalleryDto extends DtoBase {
     name: string;
     description: string;
     authorId: number;
 }
 
-export interface GalleryItemDto extends JsonBase {
+export interface GalleryItemDto extends DtoBase {
     id: number;
     imageName: string;
     title: string;
     galleryId: number;
 }
 
-export interface GalleryListDto extends JsonBase {
+export interface GalleryListDto extends DtoBase {
     galleries: GalleryDto[];
 }
 
-export interface GalleryItemsListDto extends JsonBase {
+export interface GalleryItemsListDto extends DtoBase {
     items: GalleryItemDto[];
 }
 
 // TODO upload of file
-// export interface AddGalleryItemDto extends JsonBase {
+// export interface AddGalleryItemDto extends DtoBase {
 //     galleryId: number;
 //     imageName: string;
 // }
@@ -124,7 +124,7 @@ export function EditGalleryItemAction(
 }
 
 export function RemoveGalleryAction(galleryId: number, callback: (error?: string | object) => void) {
-    const data: RequestId = {
+    const data: RequestByIdDto = {
         id: galleryId
     };
     callRestApiWithoutResult(
@@ -137,7 +137,7 @@ export function RemoveGalleryAction(galleryId: number, callback: (error?: string
 }
 
 export function RemoveGalleryItemAction(galleryItemId: number, callback: (error?: string | object) => void) {
-    const data: RequestId = {
+    const data: RequestByIdDto = {
         id: galleryItemId
     };
     callRestApiWithoutResult(
