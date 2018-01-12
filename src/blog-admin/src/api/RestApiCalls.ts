@@ -50,6 +50,54 @@ export function callRestApiWithResult<T extends DtoBase | ErrorMessageDto>(
         });
 }
 
+export function callRestApiUploadFile(
+    endpointPath: string,
+    file: File,
+    callback: (error?: string) => void,
+    id?: number
+) {
+    State.uploadingCount++;
+    const endpoint = State.endpoint + endpointPath;
+    const params: AxiosRequestConfig = {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Accept: "application/json"
+        },
+        params: {
+            tokenId: getTokenId(),
+            id: id
+        }
+    };
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    // const data = reader.result;
+    const data = new FormData();
+    data.append("file", file);
+    axios
+        .post(endpoint, data, params)
+        .then(response => {
+            State.uploadingCount--;
+            return callback();
+        })
+        .catch(error => {
+            State.uploadingCount--;
+            if (
+                error.response !== undefined &&
+                error.response.data !== undefined &&
+                error.response.data.type !== undefined &&
+                error.response.data.type === "ErrorMessageDto" &&
+                error.response.data.message !== null
+            ) {
+                return callback(error.response.data.message);
+            } else if (error.message !== undefined) {
+                return callback(error.message);
+            }
+            return callback(JSON.stringify(error));
+        });
+    // };
+    // reader.readAsBinaryString(file);
+}
+
 export function callRestApiWithoutResult(endpointPath: string, callback: (error?: string) => void, data?: object) {
     const endpoint = State.endpoint + endpointPath;
     const params: AxiosRequestConfig = {

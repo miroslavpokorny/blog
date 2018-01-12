@@ -1,5 +1,5 @@
 import { DtoBase } from "./DtoBase";
-import { callRestApiWithResult, callRestApiWithoutResult } from "./RestApiCalls";
+import { callRestApiWithResult, callRestApiWithoutResult, callRestApiUploadFile } from "./RestApiCalls";
 import { Endpoint } from "./Endpoint";
 import { RequestByIdDto } from "./RequestId";
 import { UserInfoDto } from "./UsersControllerApi";
@@ -47,13 +47,23 @@ export function GetGalleryListAction(callback: (error?: string | object, result?
     });
 }
 
-export function GetGalleryItemsListAction(callback: (error?: string | object, result?: GalleryItemsListDto) => void) {
-    callRestApiWithResult<GalleryItemsListDto>(Endpoint.GalleryItemList, (error, result) => {
-        if (error !== undefined) {
-            return callback(error, undefined);
-        }
-        return callback(undefined, result);
-    });
+export function GetGalleryItemsListAction(
+    id: number,
+    callback: (error?: string | object, result?: GalleryItemsListDto) => void
+) {
+    const data: RequestByIdDto = {
+        id: id
+    };
+    callRestApiWithResult<GalleryItemsListDto>(
+        Endpoint.GalleryItemList,
+        (error, result) => {
+            if (error !== undefined) {
+                return callback(error, undefined);
+            }
+            return callback(undefined, result);
+        },
+        data
+    );
 }
 
 export function AddGalleryAction(
@@ -76,8 +86,16 @@ export function AddGalleryAction(
     );
 }
 
-// TODO upload of file
-// export function AddGalleryItemAction()
+export function AddGalleryItemAction(galleryId: number, file: File, callback: (error?: string | object) => void) {
+    callRestApiUploadFile(
+        Endpoint.GalleryItemAdd,
+        file,
+        error => {
+            callback(error);
+        },
+        galleryId
+    );
+}
 
 export function EditGalleryAction(
     id: number,

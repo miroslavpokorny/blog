@@ -8,6 +8,7 @@ import GalleryPage from "./pages/GalleryPage";
 import ProfilePage from "./pages/ProfilePage";
 import UserPage from "./pages/UserPage";
 import SignPage from "./pages/SignPage";
+import GalleryItemPage from "./pages/GalleryItemPage";
 
 export default class Router extends React.Component {
     render() {
@@ -22,6 +23,7 @@ export default class Router extends React.Component {
                     <Route path="/profile/:action?/:id?" component={ProfilePage} />
                     <Route path="/sign/:action" component={SignPage} />
                     <Route path="/user" component={UserPage} />
+                    <Route path="/galleryItem/:id" component={GalleryItemPage} />
                 </Switch>
             </HashRouter>
         );
@@ -46,5 +48,6 @@ export enum RouteName {
     signIn = "/sign/in",
     signOut = "/sign/out",
     signUp = "/sign/up",
-    signPassword = "/sign/password"
+    signPassword = "/sign/password",
+    galleryItem = "/galleryItem"
 }

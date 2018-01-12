@@ -10,8 +10,10 @@ import io.github.miroslavpokorny.blog.model.manager.GalleryManager;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -162,6 +164,11 @@ public class GalleryController extends AuthorizeController {
         }
         galleryItem.setTitle(galleryItemDto.getTitle());
         galleryManager.updateGalleryItem(galleryItem);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/gallery/itemAdd")
+    public ResponseEntity uploadGalleryItem(@RequestParam(required = true) MultipartFile file, @RequestParam(value = "tokenId", required = true) String tokenId, @RequestParam(value = "id", required = false) String galleryId) {
         return new ResponseEntity(HttpStatus.OK);
     }
 

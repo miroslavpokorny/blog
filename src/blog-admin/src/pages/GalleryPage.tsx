@@ -145,7 +145,8 @@ export default class GalleryPage extends React.Component<PageProps> {
                                                 </Button>
                                                 <Button
                                                     onClick={() => {
-                                                        // TODO redirect ot edit of gallery items
+                                                        State.mainNavigation.redirectId = item.id;
+                                                        State.mainNavigation.redirectLink = RouteName.galleryItem;
                                                     }}
                                                 >
                                                     Edit items

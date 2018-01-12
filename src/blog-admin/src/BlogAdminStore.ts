@@ -18,6 +18,7 @@ export class BlogAdminStore {
     };
 
     @observable isLoading: boolean = false;
+    @observable uploadingCount: number = 0;
 
     endpoint: string = "";
 
