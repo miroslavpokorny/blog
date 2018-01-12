@@ -26,4 +26,26 @@ public abstract class BaseController {
     public ResponseEntity conflictResponse() {
         return conflictResponse("Conflict!");
     }
+
+    public ResponseEntity badRequestResponse() {
+        return badRequestResponse("Bad request!");
+    }
+
+    public ResponseEntity badRequestResponse(String message) {
+        ErrorMessageDto json = new ErrorMessageDto();
+        json.setMessage(message);
+        json.setCode(HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(json, HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity internalServerErrorResponse() {
+        return internalServerErrorResponse("Internal server error!");
+    }
+
+    public ResponseEntity internalServerErrorResponse(String message) {
+        ErrorMessageDto json = new ErrorMessageDto();
+        json.setMessage(message);
+        json.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(json, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

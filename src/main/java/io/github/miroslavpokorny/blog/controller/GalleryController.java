@@ -8,14 +8,22 @@ import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.dto.*;
 import io.github.miroslavpokorny.blog.model.manager.GalleryManager;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -168,12 +176,28 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping(value = "/api/gallery/itemAdd")
-    public ResponseEntity uploadGalleryItem(@RequestParam(required = true) MultipartFile file, @RequestParam(value = "tokenId", required = true) String tokenId, @RequestParam(value = "id", required = false) String galleryId) {
+    public ResponseEntity uploadGalleryItem(@RequestParam(required = true) MultipartFile file, @RequestParam(value = "tokenId", required = true) String tokenId, @RequestParam(value = "id", required = true) int galleryId, HttpServletRequest request) {
+        if (file.isEmpty()) {
+            return badRequestResponse("No file was uploaded!");
+        }
+        String galleryPath = request.getSession().getServletContext().getRealPath("/images/");
+        try {
+            File galleryDir = new File(galleryPath);
+            if (!galleryDir.exists()) {
+                galleryDir.mkdirs();
+            }
+            String fileName = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(galleryPath + fileName )));
+            FileCopyUtils.copy(file.getInputStream(), stream);
+            stream.close();
+            ArrayList<String> fileNames = new ArrayList<>();
+            fileNames.add(fileName);
+            galleryManager.addImagesToGallery(galleryId, fileNames);
+        } catch (Exception exception) {
+            return internalServerErrorResponse();
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
-
-    // TODO implement upload of file
-    //    GalleryItemAdd = "/api/gallery/itemAdd",
 
     private boolean isAccessForbidden(String tokenId) {
         return !this.authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.EDITOR);

@@ -7,13 +7,14 @@ import {
     GalleryItemsListDto,
     GetGalleryItemsListAction,
     RemoveGalleryItemAction,
-    AddGalleryItemAction
+    AddGalleryItemAction,
+    EditGalleryItemAction
 } from "../api/GalleryControllerApi";
 import { observer } from "mobx-react";
 import { State } from "../BlogAdminStore";
 import { RouteName } from "../Router";
 import FileUpload from "../components/FileUpload";
-import { ButtonToolbar, Button, Alert, Table, Modal } from "react-bootstrap";
+import { ButtonToolbar, Button, Alert, Table, Modal, FormGroup, ControlLabel, FormControl } from "react-bootstrap";
 import LoadingOverlay from "../components/LoadingOverlay";
 
 interface GalleryItemPageParams {
@@ -21,6 +22,16 @@ interface GalleryItemPageParams {
 }
 
 interface PageProps extends RouteComponentProps<GalleryItemPageParams> {}
+
+const imgPreviewTableStyle = {
+    maxWidth: 150,
+    maxHeight: 150
+};
+
+const imgPreviewModalStyle = {
+    maxWidth: 300,
+    maxHeight: 300
+};
 
 @observer
 export default class GalleryItemPage extends React.Component<PageProps> {
@@ -32,6 +43,7 @@ export default class GalleryItemPage extends React.Component<PageProps> {
         showModalUpload: boolean;
         selectedGalleryItemId?: number;
         selectedGalleryItemTitle?: string;
+        selectedGalleryItemImageName?: string;
         showModalEdit: boolean;
     };
 
@@ -47,6 +59,7 @@ export default class GalleryItemPage extends React.Component<PageProps> {
             showModalUpload: false,
             selectedGalleryItemId: undefined,
             selectedGalleryItemTitle: undefined,
+            selectedGalleryItemImageName: undefined,
             showModalEdit: false
         };
         if (this.state.galleryId === NaN) {
@@ -118,7 +131,13 @@ export default class GalleryItemPage extends React.Component<PageProps> {
                                     return (
                                         <tr key={i}>
                                             <td>{item.id}</td>
-                                            <td>{item.imageName}</td>
+                                            <td>
+                                                <img
+                                                    style={imgPreviewTableStyle}
+                                                    alt={item.imageName}
+                                                    src={`${State.endpoint}/images/${item.imageName}`}
+                                                />
+                                            </td>
                                             <td>{item.title}</td>
                                             <td>
                                                 <Button
@@ -131,7 +150,8 @@ export default class GalleryItemPage extends React.Component<PageProps> {
                                                     onClick={() => {
                                                         this.setState({
                                                             selectedGalleryItemId: item.id,
-                                                            selectedGalleryItemTitle: item.title
+                                                            selectedGalleryItemTitle: item.title,
+                                                            selectedGalleryItemImageName: item.imageName
                                                         });
                                                         this.setState({ showModalEdit: true });
                                                     }}
@@ -185,7 +205,65 @@ export default class GalleryItemPage extends React.Component<PageProps> {
     }
 
     private renderEditItemModal() {
-        return <div>Edit modal</div>;
+        return (
+            <div>
+                <div className="static-modal">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title>Edit item title</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h3>Preview</h3>
+                            <img
+                                style={imgPreviewModalStyle}
+                                alt={this.state.selectedGalleryItemImageName}
+                                src={`${State.endpoint}/images/${this.state.selectedGalleryItemImageName}`}
+                            />
+                            <FormGroup controlId="formControlName">
+                                <ControlLabel>Title</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    placeholder="Name"
+                                    onChange={event => {
+                                        this.setState({
+                                            selectedGalleryItemTitle: (event.target as HTMLInputElement).value
+                                        });
+                                    }}
+                                    value={this.state.selectedGalleryItemTitle}
+                                />
+                            </FormGroup>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button
+                                onClick={() => {
+                                    this.setState({ showModalEdit: false });
+                                }}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                bsStyle="primary"
+                                onClick={() => {
+                                    if (
+                                        this.state.selectedGalleryItemId !== undefined &&
+                                        this.state.selectedGalleryItemTitle !== undefined
+                                    ) {
+                                        this.editGalleryItem(
+                                            this.state.selectedGalleryItemId,
+                                            this.state.selectedGalleryItemTitle
+                                        );
+                                        this.setState({ showModalEdit: false });
+                                    }
+                                }}
+                            >
+                                Edit gallery item
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </div>
+            </div>
+        );
     }
 
     private loadGalleryItems() {
@@ -196,7 +274,7 @@ export default class GalleryItemPage extends React.Component<PageProps> {
             if (error !== undefined) {
                 this.handleError(error);
             } else {
-                this.state.galleryItemsList = result;
+                this.setState({ galleryItemsList: result });
             }
         });
     }
@@ -207,25 +285,31 @@ export default class GalleryItemPage extends React.Component<PageProps> {
                 this.handleError(error);
             } else {
                 this.handleSuccess("Gallery item was deleted!");
+                this.loadGalleryItems();
             }
         });
     }
 
     private uploadFiles(files: File[]) {
-        const errors: Array<string | object> = [];
-        console.log("Before upload");
         files.forEach(file => {
-            console.log("Upload start");
             AddGalleryItemAction(this.state.galleryId, file, error => {
-                console.log("Upload callback");
-                if (error !== undefined) {
-                    errors.push(error);
+                if (State.uploadingCount === 0) {
+                    this.setState({ showModalUpload: false });
+                    this.loadGalleryItems();
                 }
             });
         });
-        console.log("Upload should done");
+    }
 
-        console.log(errors);
+    private editGalleryItem(galleryId: number, title: string) {
+        EditGalleryItemAction(galleryId, title, error => {
+            if (error !== undefined) {
+                this.handleError(error);
+            } else {
+                this.handleSuccess("Gallery item was successfully edited!");
+                this.loadGalleryItems();
+            }
+        });
     }
 
     private handleError(error: string | object) {

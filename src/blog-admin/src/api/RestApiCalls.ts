@@ -68,9 +68,6 @@ export function callRestApiUploadFile(
             id: id
         }
     };
-    // const reader = new FileReader();
-    // reader.onload = () => {
-    // const data = reader.result;
     const data = new FormData();
     data.append("file", file);
     axios
@@ -94,8 +91,6 @@ export function callRestApiUploadFile(
             }
             return callback(JSON.stringify(error));
         });
-    // };
-    // reader.readAsBinaryString(file);
 }
 
 export function callRestApiWithoutResult(endpointPath: string, callback: (error?: string) => void, data?: object) {

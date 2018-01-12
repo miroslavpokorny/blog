@@ -119,18 +119,12 @@ export function EditGalleryAction(
     );
 }
 
-export function EditGalleryItemAction(
-    id: number,
-    imageName: string,
-    title: string,
-    galleryId: number,
-    callback: (error?: string | object) => void
-) {
+export function EditGalleryItemAction(id: number, title: string, callback: (error?: string | object) => void) {
     const data: GalleryItemDto = {
         id: id,
-        imageName: imageName,
+        imageName: "",
         title: title,
-        galleryId: galleryId
+        galleryId: 0
     };
     callRestApiWithoutResult(
         Endpoint.GalleryItemEdit,
