@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface ArticleManager {
     List<Article> getAllArticlesByUserId(int userId);
+    List<Article> getAllArticles();
     Article createArticle(String name, String content, int author, int category, boolean visible, String previewImage);
     Article createArticle(String name, String content, int author, int category, boolean visible, String previewImage, Integer gallery);
     Article createArticle(Article article);

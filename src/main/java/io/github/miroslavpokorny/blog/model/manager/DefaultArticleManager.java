@@ -39,6 +39,11 @@ public class DefaultArticleManager implements ArticleManager {
     }
 
     @Override
+    public List<Article> getAllArticles() {
+        return articleDao.getAll();
+    }
+
+    @Override
     public Article createArticle(String name, String content, int author, int category, boolean visible, String previewImage) {
         return createArticle(name, content, author, category, visible, previewImage, null);
     }
