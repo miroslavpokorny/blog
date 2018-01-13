@@ -27,7 +27,7 @@ class WysiwygEditor extends React.Component<WysiwygProps> {
     componentDidMount() {
         tinymce.init({
             selector: "textarea",
-            height: 500,
+            height: 400,
             menubar: false,
             toolbar:
                 "undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",

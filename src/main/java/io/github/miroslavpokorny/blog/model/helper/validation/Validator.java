@@ -29,6 +29,20 @@ public class Validator {
         return validator;
     }
 
+    public static Validator graterThan(int value, int min) {
+        Validator validator = new Validator();
+        validator.value = String.valueOf(value);
+        validator.graterThan(min);
+        return validator;
+    }
+
+    public static Validator graterThan(String value, int min) {
+        Validator validator = new Validator();
+        validator.value = value;
+        validator.graterThan(min);
+        return validator;
+    }
+
     public Validator notEmpty() {
         ValidationRule rule = new NotEmpty(value);
         validations.add(rule);
@@ -43,6 +57,12 @@ public class Validator {
 
     public Validator sameAs(String sameAs) {
         ValidationRule rule = new SameAs(value, sameAs);
+        validations.add(rule);
+        return this;
+    }
+
+    public Validator graterThan(int min) {
+        ValidationRule rule = new GraterThan(value, min);
         validations.add(rule);
         return this;
     }

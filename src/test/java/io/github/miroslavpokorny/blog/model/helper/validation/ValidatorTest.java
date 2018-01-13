@@ -44,4 +44,16 @@ public class ValidatorTest {
         Assert.assertFalse(Validator.notEmpty("abc").email().isValid());
         Assert.assertTrue(Validator.notEmpty("a@a.aa").email().isValid());
     }
+
+    @Test
+    public void graterThanTest() throws Exception {
+        Assert.assertFalse(Validator.graterThan("", 0).isValid());
+        Assert.assertFalse(Validator.graterThan("a", 0).isValid());
+        Assert.assertFalse(Validator.graterThan(0, 0).isValid());
+        Assert.assertFalse(Validator.graterThan(-1, 0).isValid());
+        Assert.assertFalse(Validator.graterThan(-2, -1).isValid());
+        Assert.assertTrue(Validator.graterThan(1, -1).isValid());
+        Assert.assertTrue(Validator.graterThan(-1, -2).isValid());
+        Assert.assertTrue(Validator.graterThan(1, 0).isValid());
+    }
 }

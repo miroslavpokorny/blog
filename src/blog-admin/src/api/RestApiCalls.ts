@@ -93,6 +93,52 @@ export function callRestApiUploadFile(
         });
 }
 
+export function callRestApiUploadDataAndFile(
+    endpointPath: string,
+    callback: (error?: string) => void,
+    file: File,
+    json: DtoBase
+) {
+    State.uploadingCount++;
+    State.isLoading = true;
+    const endpoint = State.endpoint + endpointPath;
+    const params: AxiosRequestConfig = {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Accept: "application/json"
+        },
+        params: {
+            tokenId: getTokenId()
+        }
+    };
+    const data = new FormData();
+    data.append("json", JSON.stringify(json));
+    data.append("file", file);
+    axios
+        .post(endpoint, data, params)
+        .then(response => {
+            State.uploadingCount--;
+            State.isLoading = false;
+            return callback();
+        })
+        .catch(error => {
+            State.uploadingCount--;
+            State.isLoading = false;
+            if (
+                error.response !== undefined &&
+                error.response.data !== undefined &&
+                error.response.data.type !== undefined &&
+                error.response.data.type === "ErrorMessageDto" &&
+                error.response.data.message !== null
+            ) {
+                return callback(error.response.data.message);
+            } else if (error.message !== undefined) {
+                return callback(error.message);
+            }
+            return callback(JSON.stringify(error));
+        });
+}
+
 export function callRestApiWithoutResult(endpointPath: string, callback: (error?: string) => void, data?: object) {
     const endpoint = State.endpoint + endpointPath;
     const params: AxiosRequestConfig = {
