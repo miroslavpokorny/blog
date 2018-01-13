@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router";
 import PageHelper from "../helpers/PageHelper";
 import { UserRole } from "../api/UserRole";
 import { observer } from "mobx-react";
+import WysiwygEditor from "../components/WysiwygEditor";
 // import { State } from '../BlogAdminStore';
 
 interface ArticlePageParams {
@@ -15,6 +16,21 @@ interface PageProps extends RouteComponentProps<ArticlePageParams> {}
 
 @observer
 export default class ArticlePage extends React.Component<PageProps> {
+    state: {
+        articleContent: string;
+        errorMessage?: string;
+        successMessage?: string;
+    };
+
+    constructor(props: PageProps) {
+        super(props);
+        this.state = {
+            errorMessage: undefined,
+            successMessage: undefined,
+            articleContent: ""
+        };
+    }
+
     render() {
         return PageHelper.hasUserRightToAccessOrRedirect(UserRole.Editor, this.props.location.pathname, () => {
             return (
@@ -42,6 +58,14 @@ export default class ArticlePage extends React.Component<PageProps> {
 
     private renderAddArticle(): JSX.Element | JSX.Element[] {
         // TODO implement
-        return <div>Add article</div>;
+        return (
+            <div>
+                <h2>Add article</h2>
+                <WysiwygEditor
+                    text={this.state.articleContent}
+                    onChange={value => this.setState({ articleContent: value })}
+                />
+            </div>
+        );
     }
 }
