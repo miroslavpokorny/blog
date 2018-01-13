@@ -6,6 +6,7 @@ import io.github.miroslavpokorny.blog.model.Gallery;
 import io.github.miroslavpokorny.blog.model.GalleryItem;
 import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.dto.*;
+import io.github.miroslavpokorny.blog.model.helper.ResourceHelper;
 import io.github.miroslavpokorny.blog.model.manager.GalleryManager;
 import io.github.miroslavpokorny.blog.model.manager.UserManager;
 import org.apache.commons.io.FilenameUtils;
@@ -110,13 +111,17 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/gallery/remove")
-    public ResponseEntity removeGallery(@RequestBody RequestByIdDto galleryId, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity removeGallery(@RequestBody RequestByIdDto galleryId, @RequestParam(value = "tokenId", required = true) String tokenId, HttpServletRequest request) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }
         if (isAccessForbidden(tokenId)) {
             return forbiddenResponse();
         }
+        List<GalleryItem> galleryItems = galleryManager.getAllGalleryItemsByGalleryId(galleryId.getId());
+        galleryItems.forEach(galleryItem -> {
+            ResourceHelper.removeImageResourceIfExist(request, galleryItem.getImageName());
+        });
         galleryManager.deleteGalleryById(galleryId.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -147,13 +152,18 @@ public class GalleryController extends AuthorizeController {
     }
 
     @RequestMapping("/api/gallery/itemRemove")
-    public ResponseEntity removeGalleryItem(@RequestBody RequestByIdDto galleryItemId, @RequestParam(value = "tokenId", required = true) String tokenId) {
+    public ResponseEntity removeGalleryItem(@RequestBody RequestByIdDto galleryItemId, @RequestParam(value = "tokenId", required = true) String tokenId, HttpServletRequest request) {
         if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
         }
         if (isAccessForbidden(tokenId)) {
             return forbiddenResponse();
         }
+        GalleryItem galleryItem = galleryManager.getGalleryItemById(galleryItemId.getId());
+        if (galleryItem == null) {
+            return notFoundResponse("Gallery item was not found!");
+        }
+        ResourceHelper.removeImageResourceIfExist(request, galleryItem.getImageName());
         galleryManager.deleteGalleryItemById(galleryItemId.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -177,25 +187,24 @@ public class GalleryController extends AuthorizeController {
 
     @RequestMapping(value = "/api/gallery/itemAdd")
     public ResponseEntity uploadGalleryItem(@RequestParam(required = true) MultipartFile file, @RequestParam(value = "tokenId", required = true) String tokenId, @RequestParam(value = "id", required = true) int galleryId, HttpServletRequest request) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            return unAuthorizedResponse();
+        }
+        if (isAccessForbidden(tokenId)) {
+            return forbiddenResponse();
+        }
         if (file.isEmpty()) {
             return badRequestResponse("No file was uploaded!");
         }
-        String galleryPath = request.getSession().getServletContext().getRealPath("/images/");
-        try {
-            File galleryDir = new File(galleryPath);
-            if (!galleryDir.exists()) {
-                galleryDir.mkdirs();
-            }
-            String fileName = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(galleryPath + fileName )));
-            FileCopyUtils.copy(file.getInputStream(), stream);
-            stream.close();
-            ArrayList<String> fileNames = new ArrayList<>();
-            fileNames.add(fileName);
-            galleryManager.addImagesToGallery(galleryId, fileNames);
-        } catch (Exception exception) {
+        String galleryPath = ResourceHelper.getImagesResourceDir(request);
+        ResourceHelper.createDirsIfNotExist(galleryPath);
+        String fileName = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+        if (!ResourceHelper.copyFile(file, galleryPath + fileName)) {
             return internalServerErrorResponse();
         }
+        ArrayList<String> fileNames = new ArrayList<>(1) ;
+        fileNames.add(fileName);
+        galleryManager.addImagesToGallery(galleryId, fileNames);
         return new ResponseEntity(HttpStatus.OK);
     }
 
