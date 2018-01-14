@@ -52,13 +52,20 @@ class FileUpload extends React.Component<FileUploadProps> {
                 </Dropzone>
                 <div>
                     {this.state.previews.length > 0 && <h3>Preview</h3>}
-                    {this.state.previews.map((item, i) => {
-                        return (
-                            <div className="file-upload-previews" key={i}>
-                                <img alt="preview" src={item} />
+                    {this.props.multiple &&
+                        this.state.previews.map((item, i) => {
+                            return (
+                                <div className="file-upload-previews" key={i}>
+                                    <img alt="preview" src={item} />
+                                </div>
+                            );
+                        })}
+                    {!this.props.multiple &&
+                        this.state.previews.length > 0 && (
+                            <div className="file-upload-previews">
+                                <img alt="preview" src={this.state.previews[this.state.previews.length - 1]} />
                             </div>
-                        );
-                    })}
+                        )}
                 </div>
             </div>
         );

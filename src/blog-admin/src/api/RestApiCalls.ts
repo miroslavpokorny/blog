@@ -96,8 +96,8 @@ export function callRestApiUploadFile(
 export function callRestApiUploadDataAndFile(
     endpointPath: string,
     callback: (error?: string) => void,
-    file: File,
-    json: DtoBase
+    file: File | undefined,
+    json: DtoBase | undefined
 ) {
     State.uploadingCount++;
     State.isLoading = true;
@@ -112,8 +112,12 @@ export function callRestApiUploadDataAndFile(
         }
     };
     const data = new FormData();
-    data.append("json", JSON.stringify(json));
-    data.append("file", file);
+    if (json !== undefined) {
+        data.append("json", new Blob([JSON.stringify(json)], { type: "application/json" }));
+    }
+    if (file !== undefined) {
+        data.append("file", file, file.name);
+    }
     axios
         .post(endpoint, data, params)
         .then(response => {

@@ -35,6 +35,7 @@ export enum RouteName {
     about = "/about",
     article = "/article",
     articleAdd = "/article/add",
+    articleEdit = "/article/edit",
     category = "/category",
     categoryAdd = "/category/add",
     gallery = "/gallery",

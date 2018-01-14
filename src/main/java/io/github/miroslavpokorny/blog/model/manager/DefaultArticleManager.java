@@ -7,6 +7,7 @@ import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class DefaultArticleManager implements ArticleManager {
 
     @Override
     public List<Article> getAllArticles() {
-        return articleDao.getAll();
+        return articleDao.getAllArticles();
     }
 
     @Override
@@ -60,6 +61,8 @@ public class DefaultArticleManager implements ArticleManager {
         if (gallery != null) {
             article.setGallery(galleryDao.loadById(gallery));
         }
+        article.setPublishDate(new Date());
+        article.setEditDate(new Date());
         return createArticle(article);
     }
 

@@ -17,7 +17,8 @@ export default class AboutPage extends React.Component<PageProps> {
             <div>
                 <MainNavigation pathName={this.props.location.pathname} />
                 <div className="container">
-                    <p>About page</p>
+                    <h1>Blog administration</h1>
+                    <p />
                 </div>
             </div>
         );

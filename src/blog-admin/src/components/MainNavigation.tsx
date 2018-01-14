@@ -4,7 +4,6 @@ import * as Nav from "react-bootstrap/lib/Nav";
 import * as NavItem from "react-bootstrap/lib/NavItem";
 import * as NavDropdown from "react-bootstrap/lib/NavDropdown";
 import * as MenuItem from "react-bootstrap/lib/MenuItem";
-import { Link } from "react-router-dom";
 import { RouteName } from "../Router";
 import { Redirect } from "react-router";
 import { observer } from "mobx-react";
@@ -64,7 +63,14 @@ class MainNavigation extends React.Component<MainNavigationProps> {
             <Navbar onSelect={eventKey => this.handleSelect(eventKey)}>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <Link to={RouteName.home}>Blog Administration</Link>
+                        <a
+                            href="#"
+                            onClick={() => {
+                                State.mainNavigation.redirectLink = RouteName.home;
+                            }}
+                        >
+                            Blog Administration
+                        </a>
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Nav>

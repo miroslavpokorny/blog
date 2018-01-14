@@ -33,6 +33,23 @@ public class ArticleDao extends DaoBase<Article> implements io.github.miroslavpo
     }
 
     @Override
+    public List<Article> getAllArticles() {
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
+            ParameterExpression<Boolean> visibleExpression = criteriaBuilder.parameter(Boolean.class);
+            CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
+            Root<Article> from = criteriaQuery.from(Article.class);
+            from.fetch("author");
+            from.fetch("category");
+            from.fetch("gallery", JoinType.LEFT);
+            criteriaQuery.where(criteriaBuilder.equal(from.get("visible"), visibleExpression));
+            Query<Article> query = session.delegate().createQuery(criteriaQuery);
+            query.setParameter(visibleExpression, true);
+            return query.getResultList();
+        }
+    }
+
+    @Override
     public PaginationHelper<Article> getNewestArticles(int page, int itemsPerPage) {
         try (CloseableSession session = HibernateHelper.getSession()) {
             CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();

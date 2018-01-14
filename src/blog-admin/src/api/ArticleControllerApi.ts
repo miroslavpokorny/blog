@@ -98,22 +98,13 @@ export function EditArticleAction(
         name: name,
         id: articleId
     };
-    if (previewImage !== undefined) {
-        callRestApiUploadDataAndFile(
-            Endpoint.ArticleEdit,
-            error => {
-                callback(error);
-            },
-            previewImage,
-            json
-        );
-        return;
-    }
-    callRestApiWithoutResult(
+    callRestApiUploadDataAndFile(
         Endpoint.ArticleEdit,
         error => {
             callback(error);
         },
+        previewImage,
         json
     );
+    return;
 }
