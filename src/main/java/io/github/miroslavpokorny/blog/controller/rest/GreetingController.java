@@ -1,4 +1,4 @@
-package io.github.miroslavpokorny.blog.controller;
+package io.github.miroslavpokorny.blog.controller.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

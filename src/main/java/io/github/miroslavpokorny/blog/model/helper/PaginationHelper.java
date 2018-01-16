@@ -42,4 +42,8 @@ public class PaginationHelper <T> {
     public void setItemsPerPage(int itemsPerPage) {
         this.itemsPerPage = itemsPerPage;
     }
+
+    public int getNumberOfPages() {
+        return (int) Math.ceil(total / (float) itemsPerPage);
+    }
 }

@@ -1,4 +1,4 @@
-package io.github.miroslavpokorny.blog.controller;
+package io.github.miroslavpokorny.blog.controller.rest;
 
 import io.github.miroslavpokorny.blog.model.dto.ErrorMessageDto;
 import org.springframework.http.HttpStatus;

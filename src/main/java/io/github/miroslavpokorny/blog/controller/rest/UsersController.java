@@ -1,4 +1,4 @@
-package io.github.miroslavpokorny.blog.controller;
+package io.github.miroslavpokorny.blog.controller.rest;
 
 import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
