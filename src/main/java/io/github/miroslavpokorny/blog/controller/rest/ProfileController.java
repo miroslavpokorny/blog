@@ -3,6 +3,7 @@ package io.github.miroslavpokorny.blog.controller.rest;
 import io.github.miroslavpokorny.blog.authentication.Authentication;
 import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.User;
+import io.github.miroslavpokorny.blog.model.dto.ChangePasswordDto;
 import io.github.miroslavpokorny.blog.model.dto.ProfileInfoDto;
 import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
 import io.github.miroslavpokorny.blog.model.dto.RequestByIdDto;
@@ -28,8 +29,11 @@ public class ProfileController extends AuthorizeController {
 
     @RequestMapping("/api/profile/load")
     public ResponseEntity loadProfile(@RequestBody RequestByIdDto request, @RequestParam(value = "tokenId", required = true) String tokenId) {
-        if (!isAccessAllowed(tokenId, request.getId())) {
+        if (!authentication.isAuthenticate(tokenId)) {
             return unAuthorizedResponse();
+        }
+        if (!isAccessAllowed(tokenId, request.getId())) {
+            return forbiddenResponse();
         }
         User user = userManager.getUserById(request.getId());
         ProfileInfoDto json = new ProfileInfoDto();
@@ -43,7 +47,7 @@ public class ProfileController extends AuthorizeController {
     @RequestMapping("/api/profile/edit")
     public ResponseEntity editProfile(@RequestBody ProfileInfoDto profile, @RequestParam(value = "tokenId", required = true) String tokenId) {
         if (!isAccessAllowed(tokenId, profile.getId())) {
-            return unAuthorizedResponse();
+            return forbiddenResponse();
         }
         User user = userManager.getUserById(profile.getId());
         user.setName(profile.getName());
@@ -57,9 +61,29 @@ public class ProfileController extends AuthorizeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping("/api/profile/changePassword")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordDto changePasswordDto, @RequestParam(value = "tokenId", required = true) String tokenId) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            return unAuthorizedResponse();
+        }
+        if (!isAccessAllowed(tokenId, changePasswordDto.getUserId())) {
+            return forbiddenResponse();
+        }
+        User user = userManager.getUserById(changePasswordDto.getUserId());
+        if (user == null) {
+            return notFoundResponse("User was not found!");
+        }
+        if (!authentication.checkPassword(changePasswordDto.getOldPassword(), user.getPassword())) {
+            return forbiddenResponse("Password is incorrect!");
+        }
+        user.setPassword(authentication.hashPassword(changePasswordDto.getNewPassword()));
+        userManager.updateUser(user);
+        authentication.getAuthenticatedUser(tokenId).reloadUserInfo();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     private boolean isAccessAllowed(String tokenId, int requestId) {
-        return (this.authentication.isAuthenticate(tokenId) &&
-                (this.authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.ADMINISTRATOR) ||
-                this.authentication.getAuthenticatedUser(tokenId).getUser().getId() == requestId));
+        return (this.authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.ADMINISTRATOR) ||
+                this.authentication.getAuthenticatedUser(tokenId).getUser().getId() == requestId);
     }
 }

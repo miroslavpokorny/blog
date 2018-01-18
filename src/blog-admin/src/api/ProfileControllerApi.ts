@@ -3,18 +3,24 @@ import { Endpoint } from "./Endpoint";
 import { DtoBase } from "./DtoBase";
 import { RequestByIdDto } from "./RequestId";
 
-export interface ProfileInfo extends DtoBase {
+export interface ProfileInfoDto extends DtoBase {
     name?: string;
     surname?: string;
     nickname: string;
     id: number;
 }
 
-export function LoadProfileAction(id: number, callback: (error?: string | object, result?: ProfileInfo) => void) {
+export interface ChangePasswordDto extends DtoBase {
+    userId: number;
+    oldPassword: string;
+    newPassword: string;
+}
+
+export function LoadProfileAction(id: number, callback: (error?: string | object, result?: ProfileInfoDto) => void) {
     const data: RequestByIdDto = {
         id: id
     };
-    callRestApiWithResult<ProfileInfo>(
+    callRestApiWithResult<ProfileInfoDto>(
         Endpoint.ProfileLoad,
         (error, result) => {
             if (error !== undefined) {
@@ -36,7 +42,7 @@ export function EditProfileAction(
     surname: string,
     callback: (error?: string | object) => void
 ) {
-    const data: ProfileInfo = {
+    const data: ProfileInfoDto = {
         id: id,
         nickname: nickname,
         name: name,
@@ -44,6 +50,29 @@ export function EditProfileAction(
     };
     callRestApiWithoutResult(
         Endpoint.ProfileEdit,
+        error => {
+            if (error !== undefined) {
+                return callback(error);
+            }
+            return callback();
+        },
+        data
+    );
+}
+
+export function ChangePasswordAction(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+    callback: (error?: string | object) => void
+) {
+    const data: ChangePasswordDto = {
+        userId: userId,
+        oldPassword: oldPassword,
+        newPassword: newPassword
+    };
+    callRestApiWithoutResult(
+        Endpoint.ProfileChangePassword,
         error => {
             if (error !== undefined) {
                 return callback(error);
