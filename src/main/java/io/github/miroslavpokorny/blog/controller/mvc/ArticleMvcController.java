@@ -10,6 +10,7 @@ import io.github.miroslavpokorny.blog.model.error.ForbiddenError;
 import io.github.miroslavpokorny.blog.model.error.NotFoundError;
 import io.github.miroslavpokorny.blog.model.error.UnauthorizedError;
 import io.github.miroslavpokorny.blog.model.form.CommentForm;
+import io.github.miroslavpokorny.blog.model.form.RateForm;
 import io.github.miroslavpokorny.blog.model.helper.ModelToViewModelMapper;
 import io.github.miroslavpokorny.blog.model.manager.ArticleManager;
 import io.github.miroslavpokorny.blog.model.manager.CategoryManager;
@@ -52,6 +53,7 @@ public class ArticleMvcController {
         List<Category> categories = categoryManager.getAllCategories();
         List<Comment> comments = commentManager.getAllCommentsForArticleByArticleId(id);
         ArticleViewModel articleViewModel = new ArticleViewModel();
+        RateForm rateForm = new RateForm();
         if (article.getGallery() != null) {
             List<GalleryItem> galleryItems = galleryManager.getAllGalleryItemsByGalleryId(article.getGallery().getId());
             articleViewModel.setGalleryItems(galleryItems.stream().map(ModelToViewModelMapper::galleryItemToGalleryItemViewModel).collect(Collectors.toList()));
@@ -66,11 +68,15 @@ public class ArticleMvcController {
         articleViewModel.setCategory(article.getCategory().getId());
         articleViewModel.setAuthor(article.getAuthor().getNickname());
         articleViewModel.setPublishDate(article.getPublishDate());
+        articleViewModel.setRating(articleManager.getArticleRatingByArticleId(id));
         if (articleViewModel.isAuthenticated()) {
             articleViewModel.setRole(authentication.getAuthenticatedUser(tokenId).getUser().getRole().getId());
+            // articleViewModel.setUserRating(articleManager.getArticleRatingByArticleIdAndUserId(id, authentication.getAuthenticatedUser(tokenId).getUser().getId()));
+            rateForm.setRating(articleManager.getArticleRatingByArticleIdAndUserId(id, authentication.getAuthenticatedUser(tokenId).getUser().getId()));
         }
         model.addAttribute("viewModel", articleViewModel);
         model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("rateForm", rateForm);
         return "article";
     }
 
@@ -87,6 +93,18 @@ public class ArticleMvcController {
             throw new NotFoundError("Article was not found!");
         }
         commentManager.createComment(id, authentication.getAuthenticatedUser(tokenId).getUser().getId(), commentForm.getComment(), true);
+        return "redirect:/article/" + id;
+    }
+
+    @RequestMapping(value = "/rateArticle/{id}", method = RequestMethod.POST)
+    public String rateArticle(@PathVariable("id") int id, @CookieValue(value = "tokenId", required = false) String tokenId, RateForm rateForm) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            throw new UnauthorizedError("You must sign in before you can add comment!");
+        }
+        if (!authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.USER)) {
+            throw new ForbiddenError("You don't have permission to add comment!");
+        }
+        articleManager.addOrUpdateRating(id, authentication.getAuthenticatedUser(tokenId).getUser().getId(), rateForm.getRating());
         return "redirect:/article/" + id;
     }
 

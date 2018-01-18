@@ -116,14 +116,18 @@ public class DefaultArticleManager implements ArticleManager {
 
     @Override
     public Double getArticleRatingByArticleIdAndUserId(int articleId, int userId) {
-        return (double) articleRatingDao.getArticleRatingByArticleIdAndUserId(articleId, userId).getRating();
+        ArticleRating articleRating = articleRatingDao.getArticleRatingByArticleIdAndUserId(articleId, userId);
+        return articleRating != null ? (double) articleRating.getRating() : 0;
     }
 
     @Override
     public void addOrUpdateRating(int articleId, int userId, double rating) {
-        ArticleRating articleRating = new ArticleRating();
-        articleRating.setArticle(articleDao.loadById(articleId));
-        articleRating.setUser(userDao.loadById(userId));
+        ArticleRating articleRating = articleRatingDao.getArticleRatingByArticleIdAndUserId(articleId, userId);
+        if (articleRating == null) {
+            articleRating = new ArticleRating();
+            articleRating.setArticle(articleDao.loadById(articleId));
+            articleRating.setUser(userDao.loadById(userId));
+        }
         articleRating.setRating((float)rating);
         articleRatingDao.saveOrUpdate(articleRating);
     }

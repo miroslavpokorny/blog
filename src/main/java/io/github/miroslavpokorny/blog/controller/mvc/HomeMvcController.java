@@ -54,7 +54,6 @@ public class HomeMvcController {
         List<Category> categories = categoryManager.getAllCategories();
         homeViewModel.setNumberOfPages(pages.getNumberOfPages());
         homeViewModel.setPage(page);
-
         homeViewModel.setLatestArticles(pages.getItems().stream().map(ModelToViewModelMapper::articleToArticleInfoViewModel).collect(Collectors.toList()));
         homeViewModel.setCategories(categories.stream().map(ModelToViewModelMapper::categoryToCategoryInfoViewModel).collect(Collectors.toList()));
         homeViewModel.setAuthenticated(authentication.isAuthenticate(tokenId));

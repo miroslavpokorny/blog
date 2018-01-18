@@ -14,6 +14,8 @@ public class ArticleViewModel extends BaseViewModel {
     private int category;
     private String author;
     private Date publishDate;
+    private double rating;
+    private double userRating;
 
     public int getId() {
         return id;
@@ -93,5 +95,21 @@ public class ArticleViewModel extends BaseViewModel {
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public double getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(double userRating) {
+        this.userRating = userRating;
     }
 }

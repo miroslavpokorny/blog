@@ -53,7 +53,8 @@ public class ArticleRatingDao extends DaoBase<ArticleRating> implements io.githu
             criteriaQuery.select(criteriaBuilder.avg(from.get("rating")));
             Query<Double> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(articleExpression, articleDao.loadById(id));
-            return query.getSingleResult().floatValue();
+            Double result = query.uniqueResult();
+            return result != null ? result.floatValue() : 0;
         }
     }
 
@@ -74,7 +75,7 @@ public class ArticleRatingDao extends DaoBase<ArticleRating> implements io.githu
             Query<ArticleRating> query = session.delegate().createQuery(criteriaQuery);
             query.setParameter(articleExpression, articleDao.loadById(articleId));
             query.setParameter(userExpression, userDao.loadById(userId));
-            return query.getSingleResult();
+            return query.uniqueResult();
         }
     }
 }

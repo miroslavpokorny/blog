@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="viewModel" type="io.github.miroslavpokorny.blog.model.viewmodel.ArticleViewModel"*/-->
 <!--/*@thymesVar id="commentForm" type="io.github.miroslavpokorny.blog.model.form.CommentForm"*/-->
+<!--/*@thymesVar id="rateForm" type="io.github.miroslavpokorny.blog.model.form.RateForm"*/-->
 <head>
     <meta charset="UTF-8"/>
     <title th:text="'Blog - '+${viewModel.name}">Blog - article</title>
@@ -25,12 +26,17 @@
     </style>
     <link rel="stylesheet" href="../static/css/lightbox.min.css" th:href="@{/css/lightbox.min.css}"/>
     <script type="text/javascript" src="../static/js/lightbox.min.js" th:src="@{/js/lightbox.min.js}"></script>
+    <link rel="stylesheet" href="../static/starrating/css/star-rating.min.css" th:href="@{/starrating/css/star-rating.min.css}"/>
+    <script rel="text/javascript" src="../static/starrating/js/star-rating.min.js" th:src="@{/starrating/js/star-rating.min.js}"></script>
 </head>
 <body>
 <div class="container">
     <div class="col-md-8">
         <h1 th:text="${viewModel.name}">Article name</h1>
-        <p>Published on <span th:text="${viewModel.publishDate}">2018-01-18</span> by <span th:text="${viewModel.author}">Administrator</span></p>
+        <p>
+            Published on <span th:text="${viewModel.publishDate}">2018-01-18</span> by <span th:text="${viewModel.author}">Administrator</span>
+            <input th:value="${viewModel.rating}" value="3.5" id="article-rating" data-size="xs"/>
+        </p>
         <img class="preview-image" th:alt="'/images/'+${viewModel.previewImage}" th:src="@{'/images/'+${viewModel.previewImage}}" src="images/"/>
         <article th:utext="${viewModel.content}">
             <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin. Drumstick kielbasa flank, jowl short loin cow tongue. Pork tail boudin shank strip steak shankle venison. Ground round beef short loin swine tri-tip beef ribs jerky. Porchetta beef ribs cow salami.</p>
@@ -46,6 +52,13 @@
                     'wrapAround': true
                 })
             </script>
+        </div>
+        <div th:if="${viewModel.authenticated and viewModel.role >= 1}">
+            <h2>Rate article</h2>
+            <form method="post" th:object="${rateForm}" th:action="@{'/rateArticle/'+${viewModel.id}}">
+                <input class="rating rating-loading" id="user-article-rating" value="3.5" data-size="xs" data-min="0" data-max="5" data-step="0.5" required="required" th:value="${rateForm.rating}"  th:field="*{rating}"/>
+                <button class="btn btn-primary" type="submit">Rate article</button>
+            </form>
         </div>
         <div th:if="${viewModel.comments != null and viewModel.comments.size() > 0}">
             <h2>Comments</h2>
@@ -79,6 +92,12 @@
             >Category name</a>
         </div>
     </div>
+    <script>
+        $(document).on('ready', function(){
+            $('#article-rating').rating({displayOnly: true, step: 0.5});
+            $('#user-article-rating').rating({step: 0.5});
+        });
+    </script>
 </div>
 </body>
 </html>
