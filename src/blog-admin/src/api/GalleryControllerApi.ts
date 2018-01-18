@@ -32,12 +32,6 @@ export interface GalleryItemsListDto extends DtoBase {
     items: GalleryItemDto[];
 }
 
-// TODO upload of file
-// export interface AddGalleryItemDto extends DtoBase {
-//     galleryId: number;
-//     imageName: string;
-// }
-
 export function GetGalleryListAction(callback: (error?: string | object, result?: GalleryListDto) => void) {
     callRestApiWithResult<GalleryListDto>(Endpoint.GalleryList, (error, result) => {
         if (error !== undefined) {
