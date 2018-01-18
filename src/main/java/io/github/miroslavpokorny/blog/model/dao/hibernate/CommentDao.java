@@ -32,7 +32,6 @@ public class CommentDao extends DaoBase<Comment> implements io.github.miroslavpo
             CriteriaQuery<Comment> criteriaQuery = criteriaBuilder.createQuery(Comment.class);
             Root<Comment> from = criteriaQuery.from(Comment.class);
             from.fetch("author");
-            from.fetch("subComments");
             criteriaQuery.where(
                     criteriaBuilder.and(
                             criteriaBuilder.equal(from.get("article"), articleExpression),

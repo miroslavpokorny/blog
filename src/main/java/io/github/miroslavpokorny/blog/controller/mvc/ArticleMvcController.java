@@ -1,11 +1,15 @@
 package io.github.miroslavpokorny.blog.controller.mvc;
 
 import io.github.miroslavpokorny.blog.authentication.Authentication;
+import io.github.miroslavpokorny.blog.authentication.Role;
 import io.github.miroslavpokorny.blog.model.Article;
 import io.github.miroslavpokorny.blog.model.Category;
 import io.github.miroslavpokorny.blog.model.Comment;
 import io.github.miroslavpokorny.blog.model.GalleryItem;
+import io.github.miroslavpokorny.blog.model.error.ForbiddenError;
 import io.github.miroslavpokorny.blog.model.error.NotFoundError;
+import io.github.miroslavpokorny.blog.model.error.UnauthorizedError;
+import io.github.miroslavpokorny.blog.model.form.CommentForm;
 import io.github.miroslavpokorny.blog.model.helper.ModelToViewModelMapper;
 import io.github.miroslavpokorny.blog.model.manager.ArticleManager;
 import io.github.miroslavpokorny.blog.model.manager.CategoryManager;
@@ -39,7 +43,7 @@ public class ArticleMvcController {
         this.galleryManager = galleryManager;
     }
 
-    @RequestMapping("/article/{id}")
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
     public String article(Model model, @PathVariable("id") int id, @CookieValue(value = "tokenId", required = false) String tokenId) {
         Article article = articleManager.getArticleById(id);
         if (article == null) {
@@ -66,14 +70,47 @@ public class ArticleMvcController {
             articleViewModel.setRole(authentication.getAuthenticatedUser(tokenId).getUser().getRole().getId());
         }
         model.addAttribute("viewModel", articleViewModel);
+        model.addAttribute("commentForm", new CommentForm());
         return "article";
+    }
+
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.POST)
+    public String addArticleComment(@PathVariable("id") int id, @CookieValue(value = "tokenId", required = false) String tokenId, CommentForm commentForm) {
+        if (!authentication.isAuthenticate(tokenId)) {
+            throw new UnauthorizedError("You must sign in before you can add comment!");
+        }
+        if (!authentication.getAuthenticatedUser(tokenId).isUserInRole(Role.USER)) {
+            throw new ForbiddenError("You don't have permission to add comment!");
+        }
+        Article article = articleManager.getArticleById(id);
+        if (article == null) {
+            throw new NotFoundError("Article was not found!");
+        }
+        commentManager.createComment(id, authentication.getAuthenticatedUser(tokenId).getUser().getId(), commentForm.getComment(), true);
+        return "redirect:/article/" + id;
     }
 
     @ExceptionHandler(NotFoundError.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public String notFoundHandle(Exception ex, Model model) {
+        return handleError(ex, model, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedError.class)
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public String unauthorizedHandle(Exception ex, Model model) {
+        return handleError(ex, model, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenError.class)
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public String forbiddenHandle(Exception ex, Model model) {
+        return handleError(ex, model, HttpStatus.FORBIDDEN);
+    }
+
+    private String handleError(Exception ex, Model model, HttpStatus status) {
         ErrorViewModel errorViewModel = new ErrorViewModel();
-        errorViewModel.setCode("404");
+        errorViewModel.setCode(status.value() + " - " + status.getReasonPhrase());
         errorViewModel.setMessage(ex.getMessage());
         model.addAttribute("viewModel", errorViewModel);
         return "error";

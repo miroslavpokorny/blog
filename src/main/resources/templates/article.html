@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="viewModel" type="io.github.miroslavpokorny.blog.model.viewmodel.ArticleViewModel"*/-->
+<!--/*@thymesVar id="commentForm" type="io.github.miroslavpokorny.blog.model.form.CommentForm"*/-->
 <head>
     <meta charset="UTF-8"/>
     <title th:text="'Blog - '+${viewModel.name}">Blog - article</title>
@@ -18,26 +19,26 @@
             float: right;
         }
         .thumbnail-image {
-            max-width: 23%;
+            max-width: 22%;
             margin: 1%
         }
     </style>
-    <link rel="stylesheet" href="../../../webapp/css/lightbox.min.css" th:href="@{/css/lightbox.min.css}"/>
-    <script type="text/javascript" src="../../../webapp/js/lightbox.min.js" th:src="@{/js/lightbox.min.js}"></script>
+    <link rel="stylesheet" href="../../webapp/css/lightbox.min.css" th:href="@{/css/lightbox.min.css}"/>
+    <script type="text/javascript" src="../../webapp/js/lightbox.min.js" th:src="@{/js/lightbox.min.js}"></script>
 </head>
 <body>
 <div class="container">
     <div class="col-md-8">
         <h1 th:text="${viewModel.name}">Article name</h1>
         <p>Published on <span th:text="${viewModel.publishDate}">2018-01-18</span> by <span th:text="${viewModel.author}">Administrator</span></p>
-        <img class="preview-image" th:alt="'images/'+${viewModel.previewImage}" th:src="@{'images/'+${viewModel.previewImage}}" src="images/"/>
+        <img class="preview-image" th:alt="'/images/'+${viewModel.previewImage}" th:src="@{'/images/'+${viewModel.previewImage}}" src="images/"/>
         <article th:utext="${viewModel.content}">
             <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin. Drumstick kielbasa flank, jowl short loin cow tongue. Pork tail boudin shank strip steak shankle venison. Ground round beef short loin swine tri-tip beef ribs jerky. Porchetta beef ribs cow salami.</p>
         </article>
         <div th:if="${viewModel.galleryItems != null and viewModel.galleryItems.size() > 0}">
             <h2>Gallery</h2>
-            <a th:each="galleryItem : ${viewModel.galleryItems}" th:href="@{'images/'+${galleryItem.imageName}}" data-lightbox="gallery" th:data-title="${galleryItem.title}">
-                <img class="thumbnail-image" th:alt="'images/'+${galleryItem.imageName}" th:src="@{'images/'+${galleryItem.imageName}}" src="images/"/>
+            <a th:each="galleryItem : ${viewModel.galleryItems}" th:href="@{'/images/'+${galleryItem.imageName}}" data-lightbox="gallery" th:attr="data-title=${galleryItem.title}">
+                <img class="thumbnail-image" th:alt="'/images/'+${galleryItem.imageName}" th:src="@{'/images/'+${galleryItem.imageName}}" src="images/"/>
             </a>
             <script>
                 lightbox.option({
@@ -62,8 +63,8 @@
             <p>No comments are published!</p>
         </div>
         <p th:unless="${viewModel.authenticated}">You must be signed in to write comments. <a href="/admin">Click here to sign in.</a></p>
-        <form th:if="${viewModel.authenticated and viewModel.role >= 1}" method="post" >
-            <textarea class="form-control" placeholder="Write your comment here" style="resize: vertical; margin-bottom: 0.5em" required="required"></textarea>
+        <form th:if="${viewModel.authenticated and viewModel.role >= 1}" method="post" th:object="${commentForm}">
+            <textarea class="form-control" placeholder="Write your comment here" style="resize: vertical; margin-bottom: 0.5em" required="required" th:field="*{comment}"></textarea>
             <button class="btn btn-primary move-right" type="submit">Post comment</button>
         </form>
     </div>
