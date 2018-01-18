@@ -2,12 +2,10 @@ package io.github.miroslavpokorny.blog.model.viewmodel;
 
 import java.util.List;
 
-public class HomeViewModel {
+public class HomeViewModel extends PaginationViewModel {
     List<ArticleInfoViewModel> latestArticles;
 
-    Integer page;
-
-    Integer numberOfPages;
+    List<CategoryInfoViewModel> categories;
 
     public List<ArticleInfoViewModel> getLatestArticles() {
         return latestArticles;
@@ -17,19 +15,11 @@ public class HomeViewModel {
         this.latestArticles = latestArticles;
     }
 
-    public Integer getPage() {
-        return page;
+    public List<CategoryInfoViewModel> getCategories() {
+        return categories;
     }
 
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getNumberOfPages() {
-        return numberOfPages;
-    }
-
-    public void setNumberOfPages(Integer numberOfPages) {
-        this.numberOfPages = numberOfPages;
+    public void setCategories(List<CategoryInfoViewModel> categories) {
+        this.categories = categories;
     }
 }

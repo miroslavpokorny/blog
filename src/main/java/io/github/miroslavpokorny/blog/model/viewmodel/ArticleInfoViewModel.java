@@ -7,6 +7,7 @@ public class ArticleInfoViewModel {
     private String name;
     private String author;
     private String previewImage;
+    private String contentPreview;
 
     public Date getPublishDate() {
         return publishDate;
@@ -38,5 +39,13 @@ public class ArticleInfoViewModel {
 
     public void setPreviewImage(String previewImage) {
         this.previewImage = previewImage;
+    }
+
+    public String getContentPreview() {
+        return contentPreview;
+    }
+
+    public void setContentPreview(String contentPreview) {
+        this.contentPreview = contentPreview;
     }
 }
