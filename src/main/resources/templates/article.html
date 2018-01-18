@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="viewModel" type="io.github.miroslavpokorny.blog.model.viewmodel.ArticleViewModel"*/-->
 <head>
-    <meta charset="UTF-8">
-    <title>Blog</title>
+    <meta charset="UTF-8"/>
+    <title th:text="'Blog - '+${viewModel.name}">Blog - article</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -27,56 +28,54 @@
 <body>
 <div class="container">
     <div class="col-md-8">
-        <h1>Article name</h1>
-        <img class="preview-image" alt="preview" src="https://cdn.pixabay.com/photo/2018/01/13/19/39/fashion-3080644_960_720.jpg"/>
-        <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin. Drumstick kielbasa flank, jowl short loin cow tongue. Pork tail boudin shank strip steak shankle venison. Ground round beef short loin swine tri-tip beef ribs jerky. Porchetta beef ribs cow salami.</p>
-
-        <p>Cow pork flank, rump kevin spare ribs strip steak tri-tip drumstick pork belly ham ground round. Kevin tail salami fatback. Ground round ribeye tail shank doner swine corned beef strip steak filet mignon biltong ham alcatra. Alcatra flank cupim, cow short loin frankfurter t-bone drumstick beef ribs pork loin strip steak salami prosciutto buffalo porchetta. Flank meatloaf salami burgdoggen. Cow andouille pork belly swine pig. Tenderloin pig andouille burgdoggen kielbasa capicola flank tail venison.</p>
-
-        <p>Corned beef fatback pastrami shankle. Ground round short ribs jerky, bresaola flank biltong boudin tri-tip porchetta prosciutto sausage ham. Pastrami meatloaf kielbasa tongue pancetta, sausage doner ham hock. Turducken hamburger chicken, prosciutto alcatra chuck salami picanha.</p>
-        <h2>Gallery</h2>
-        <a href="https://cdn.pixabay.com/photo/2018/01/13/19/39/fashion-3080644_960_720.jpg" data-lightbox="gallery" data-title="$Title">
-            <img class="thumbnail-image" alt="preview" src="https://cdn.pixabay.com/photo/2018/01/13/19/39/fashion-3080644_960_720.jpg"/>
-        </a>
-        <a href="https://cdn.pixabay.com/photo/2016/10/26/16/38/woman-1771895_960_720.jpg" data-lightbox="gallery" data-title="$Title">
-            <img class="thumbnail-image" alt="preview" src="https://cdn.pixabay.com/photo/2016/10/26/16/38/woman-1771895_960_720.jpg"/>
-        </a>
-        <script>
-            lightbox.option({
-                'resizeDuration': 200,
-                'wrapAround': true
-            })
-        </script>
+        <h1 th:text="${viewModel.name}">Article name</h1>
+        <p>Published on <span th:text="${viewModel.publishDate}">2018-01-18</span> by <span th:text="${viewModel.author}">Administrator</span></p>
+        <img class="preview-image" th:alt="'images/'+${viewModel.previewImage}" th:src="@{'images/'+${viewModel.previewImage}}" src="images/"/>
+        <article th:utext="${viewModel.content}">
+            <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin. Drumstick kielbasa flank, jowl short loin cow tongue. Pork tail boudin shank strip steak shankle venison. Ground round beef short loin swine tri-tip beef ribs jerky. Porchetta beef ribs cow salami.</p>
+        </article>
+        <div th:if="${viewModel.galleryItems != null and viewModel.galleryItems.size() > 0}">
+            <h2>Gallery</h2>
+            <a th:each="galleryItem : ${viewModel.galleryItems}" th:href="@{'images/'+${galleryItem.imageName}}" data-lightbox="gallery" th:data-title="${galleryItem.title}">
+                <img class="thumbnail-image" th:alt="'images/'+${galleryItem.imageName}" th:src="@{'images/'+${galleryItem.imageName}}" src="images/"/>
+            </a>
+            <script>
+                lightbox.option({
+                    'resizeDuration': 200,
+                    'wrapAround': true
+                })
+            </script>
+        </div>
+        <div th:if="${viewModel.comments != null and viewModel.comments.size() > 0}">
+            <h2>Comments</h2>
+            <div class="panel panel-default" th:each="comment : ${viewModel.comments}">
+                <div class="panel-heading">
+                    Posted by <span th:text="${comment.author}">Administrator</span><span class="move-right">Posted on <span th:text="${comment.publishDate}">2018-01-18</span></span>
+                </div>
+                <div class="panel-body">
+                    <p th:text="${comment.comment}">Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin.</p>
+                </div>
+            </div>
+        </div>
         <h2>Comments</h2>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>Administrator:</span><span class="move-right">Posted on 2018-01-18</span>
-            </div>
-            <div class="panel-body">
-                <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin.</p>
-            </div>
+        <div th:if="${viewModel.comments == null or viewModel.comments.size() == 0}">
+            <p>No comments are published!</p>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>Administrator:</span><span class="move-right">Posted on 2018-01-18</span>
-            </div>
-            <div class="panel-body">
-                <p>Bacon ipsum dolor amet short loin shankle porchetta sirloin, swine picanha filet mignon ham pork belly ham hock fatback pork loin.</p>
-            </div>
-        </div>
-        <p>You must be signed in to write comments. <a href="#">Click here to sign in.</a></p>
-        <form>
-            <textarea class="form-control" placeholder="Write your comment here" style="resize: vertical; margin-bottom: 0.5em"></textarea>
-            <button class="btn btn-primary move-right">Post comment</button>
+        <p th:unless="${viewModel.authenticated}">You must be signed in to write comments. <a href="/admin">Click here to sign in.</a></p>
+        <form th:if="${viewModel.authenticated and viewModel.role >= 1}" method="post" >
+            <textarea class="form-control" placeholder="Write your comment here" style="resize: vertical; margin-bottom: 0.5em" required="required"></textarea>
+            <button class="btn btn-primary move-right" type="submit">Post comment</button>
         </form>
     </div>
     <div class="col-md-4">
         <h2>Categories</h2>
         <div class="list-group">
-            <a href="#" class="list-group-item active">Latest articles</a>
-            <a href="#" class="list-group-item">Cat 1</a>
-            <a href="#" class="list-group-item">Category number 2</a>
-            <a href="#" class="list-group-item">Lorem ipsum</a>
+            <a th:href="'/'" class="list-group-item">Latest articles</a>
+            <a th:each="category : ${viewModel.categories}"
+               th:href="'/category/'+${category.id}"
+               th:text="${category.name}"
+               th:class="${viewModel.category == category.id} ? 'list-group-item active' : 'list-group-item'"
+            >Category name</a>
         </div>
     </div>
 </div>

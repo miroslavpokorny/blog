@@ -2,8 +2,9 @@ package io.github.miroslavpokorny.blog.model.helper;
 
 import io.github.miroslavpokorny.blog.model.Article;
 import io.github.miroslavpokorny.blog.model.Category;
-import io.github.miroslavpokorny.blog.model.viewmodel.ArticleInfoViewModel;
-import io.github.miroslavpokorny.blog.model.viewmodel.CategoryInfoViewModel;
+import io.github.miroslavpokorny.blog.model.Comment;
+import io.github.miroslavpokorny.blog.model.GalleryItem;
+import io.github.miroslavpokorny.blog.model.viewmodel.*;
 import org.jsoup.Jsoup;
 
 public class ModelToViewModelMapper {
@@ -27,5 +28,21 @@ public class ModelToViewModelMapper {
         categoryInfoViewModel.setId(category.getId());
         categoryInfoViewModel.setName(category.getName());
         return categoryInfoViewModel;
+    }
+
+    public static CommentViewModel commentToCommentViewModel(Comment comment) {
+        CommentViewModel commentViewModel = new CommentViewModel();
+        commentViewModel.setAuthor(comment.getAuthor().getNickname());
+        commentViewModel.setComment(comment.getContent());
+        commentViewModel.setId(comment.getId());
+        commentViewModel.setPublishDate(comment.getPublishDate());
+        return commentViewModel;
+    }
+
+    public static GalleryItemViewModel galleryItemToGalleryItemViewModel(GalleryItem galleryItem) {
+        GalleryItemViewModel galleryItemViewModel = new GalleryItemViewModel();
+        galleryItemViewModel.setImageName(galleryItem.getImageName());
+        galleryItemViewModel.setTitle(galleryItem.getTitle());
+        return galleryItemViewModel;
     }
 }

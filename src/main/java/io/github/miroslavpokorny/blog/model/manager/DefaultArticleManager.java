@@ -95,7 +95,7 @@ public class DefaultArticleManager implements ArticleManager {
 
     @Override
     public Article getArticleById(int id) {
-        return articleDao.getById(id);
+        return articleDao.getArticleById(id);
     }
 
     @Override

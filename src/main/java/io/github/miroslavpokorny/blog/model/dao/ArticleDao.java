@@ -8,6 +8,8 @@ import java.util.List;
 public interface ArticleDao extends Dao<Article> {
     List<Article> getAllByUserId(int id);
 
+    Article getArticleById(int id);
+
     List<Article> getAllArticles();
 
     PaginationHelper<Article> getNewestArticles(int page, int itemsPerPage);
