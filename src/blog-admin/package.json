@@ -42,5 +42,6 @@
   "prettier": {
     "tabWidth": 4,
     "printWidth": 120
-  }
+  },
+  "homepage": "/admin"
 }

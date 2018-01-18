@@ -114,6 +114,7 @@ class MainNavigation extends React.Component<MainNavigationProps> {
                                     if (error) {
                                         this.setState({ signingOut: false });
                                     }
+                                    State.mainNavigation.redirectLink = RouteName.signIn;
                                 });
                             }}
                             href="#"

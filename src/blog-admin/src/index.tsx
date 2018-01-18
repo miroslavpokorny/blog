@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { GetLoggedUserAction } from "./api/SignControllerApi";
 
 // TODO change to production server
-// State.endpoint = ".";
+State.endpoint = "/";
 State.endpoint = "http://localhost:8080";
 
 ReactDOM.render(<Router />, document.getElementById("root") as HTMLElement);
