@@ -50,3 +50,7 @@ fabric.properties
 
 /target
 blog-db.mwb.bak
+
+# ignore uploaded files
+src/main/webapp/images/*-*-*-*-*.jpg
+src/main/webapp/images/*-*-*-*-*.png
