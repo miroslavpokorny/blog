@@ -130,12 +130,12 @@ public class DefaultArticleManager implements ArticleManager {
 
     @Override
     public PaginationHelper<Article> getNewestArticlesInCategory(int categoryId, int page, int itemsPerPage) {
-        return articleDao.getNewestArticlesInCategory(categoryId, page, itemsPerPage);
+        return articleDao.getNewestArticlesInCategory(page, itemsPerPage, categoryId);
     }
 
     @Override
     public PaginationHelper<Article> getNewestArticlesByUserId(int userId, int page, int itemsPerPage) {
-        return articleDao.getNewestArticlesByUserId(userId, page, itemsPerPage);
+        return articleDao.getNewestArticlesByUserId(page, itemsPerPage, userId);
     }
 
     @Override

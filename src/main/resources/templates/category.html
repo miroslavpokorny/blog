@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="viewModel" type="io.github.miroslavpokorny.blog.model.viewmodel.CategoryViewModel"*/-->
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Blog</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
@@ -16,42 +17,35 @@
 </head>
 <body>
 <div class="container">
-    <h1>Blog - $Category name</h1>
+    <h1 th:text="'Blog - '+${viewModel.currentCategory.name}">Blog - Category name</h1>
     <div class="col-md-8">
-        <div class="panel panel-default">
+        <div class="panel panel-default" th:each="article : ${viewModel.articles}">
             <div class="panel-body">
-                <h2>Article name</h2>
-                <img class="preview-image" alt="preview" src="https://cdn.pixabay.com/photo/2018/01/13/19/39/fashion-3080644_960_720.jpg"/>
-                <p>
+                <a th:href="'/article/'+${article.id}">
+                    <h2 th:text="${article.name}">Article Name</h2>
+                </a>
+                <p>Published by: <span th:text="${article.author}"></span> on <span th:text="${article.publishDate}"></span></p>
+                <img class="preview-image" th:alt="'Preview image '+${article.previewImage}" th:src="@{'images/'+${article.previewImage}}"/>
+                <p th:text="${article.contentPreview}">
                     Bacon ipsum dolor amet ham brisket leberkas boudin ball tip short loin meatball cow filet mignon alcatra. Brisket prosciutto biltong beef ham tri-tip. Tongue burgdoggen shoulder hamburger brisket cupim beef filet mignon short ribs rump. Corned beef tri-tip beef fatback frankfurter, buffalo ball tip brisket pork belly short loin. Beef pastrami short loin pork chop, hamburger strip steak brisket doner ribeye leberkas short ribs sausage buffalo jerky. Fatback shank spare ribs, doner pork loin burgdoggen hamburger bresaola swine. Jerky flank bacon frankfurter chicken pig pork belly strip steak chuck landjaeger rump pastrami kevin.
-                    <a href="#">Read more</a>
                 </p>
+                <a th:href="'/article/'+${article.id}">Read more</a>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h2>Article name</h2>
-                <img class="preview-image" alt="preview" src="https://cdn.pixabay.com/photo/2018/01/13/19/39/fashion-3080644_960_720.jpg"/>
-                <p>
-                    Bacon ipsum dolor amet ham brisket leberkas boudin ball tip short loin meatball cow filet mignon alcatra. Brisket prosciutto biltong beef ham tri-tip. Tongue burgdoggen shoulder hamburger brisket cupim beef filet mignon short ribs rump. Corned beef tri-tip beef fatback frankfurter, buffalo ball tip brisket pork belly short loin. Beef pastrami short loin pork chop, hamburger strip steak brisket doner ribeye leberkas short ribs sausage buffalo jerky. Fatback shank spare ribs, doner pork loin burgdoggen hamburger bresaola swine. Jerky flank bacon frankfurter chicken pig pork belly strip steak chuck landjaeger rump pastrami kevin.
-                    <a href="#">Read more</a>
-                </p>
-            </div>
-        </div>
-        <nav aria-label="Page navigation" style="text-align: center">
+        <nav th:if="${viewModel.numberOfPages} > 1" aria-label="Page navigation" style="text-align: center">
             <ul class="pagination">
-                <li class="disabled">
-                    <a href="#" aria-label="Previous">
+                <li th:class="${viewModel.isGoToFirstPageEnabled()} ? null : 'disabled'">
+                    <a th:href="'./'" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li>
-                    <a href="#" aria-label="Next">
+                <li th:each="page : ${viewModel.getPages()}" th:class="${page == viewModel.page} ? 'active'">
+                    <a th:href="'./'+${page}" th:text="${page}">
+                        1
+                    </a>
+                </li>
+                <li th:class="${viewModel.isGoToLastPageEnabled()} ? null : 'disabled'">
+                    <a th:href="'./'+${viewModel.numberOfPages}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -61,10 +55,12 @@
     <div class="col-md-4">
         <h2>Categories</h2>
         <div class="list-group">
-            <a href="#" class="list-group-item">Latest articles</a>
-            <a href="#" class="list-group-item active">Cat 1</a>
-            <a href="#" class="list-group-item">Category number 2</a>
-            <a href="#" class="list-group-item">Lorem ipsum</a>
+            <a th:href="'/'" class="list-group-item">Latest articles</a>
+            <a th:each="category : ${viewModel.categories}"
+               th:href="'/category/'+${category.id}"
+               th:text="${category.name}"
+               th:class="${viewModel.currentCategory.id == category.id} ? 'list-group-item active' : 'list-group-item'"
+            >Category name</a>
         </div>
     </div>
 </div>

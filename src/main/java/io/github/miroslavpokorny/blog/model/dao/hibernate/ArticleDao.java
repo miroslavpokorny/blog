@@ -1,10 +1,13 @@
 package io.github.miroslavpokorny.blog.model.dao.hibernate;
 
 import io.github.miroslavpokorny.blog.model.Article;
+import io.github.miroslavpokorny.blog.model.Category;
+import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.helper.CloseableSession;
 import io.github.miroslavpokorny.blog.model.helper.HibernateHelper;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
@@ -12,6 +15,16 @@ import java.util.List;
 
 @Repository
 public class ArticleDao extends DaoBase<Article> implements io.github.miroslavpokorny.blog.model.dao.ArticleDao {
+    private final io.github.miroslavpokorny.blog.model.dao.CategoryDao categoryDao;
+    private final io.github.miroslavpokorny.blog.model.dao.UserDao userDao;
+
+    @Autowired
+    public ArticleDao(io.github.miroslavpokorny.blog.model.dao.CategoryDao categoryDao, io.github.miroslavpokorny.blog.model.dao.UserDao userDao) {
+        this.categoryDao = categoryDao;
+        this.userDao = userDao;
+    }
+
+
     @Override
     public List<Article> getAllByUserId(int id) {
         try (CloseableSession session = HibernateHelper.getSession()) {
@@ -80,18 +93,9 @@ public class ArticleDao extends DaoBase<Article> implements io.github.miroslavpo
 
     @Override
     public PaginationHelper<Article> getNewestArticlesInCategory(int page, int itemsPerPage, int categoryId) {
-        return getNewestArticlesByColumnValue(page, itemsPerPage, "category", categoryId);
-    }
-
-    @Override
-    public PaginationHelper<Article> getNewestArticlesByUserId(int page, int itemsPerPage, int userId) {
-        return getNewestArticlesByColumnValue(page, itemsPerPage, "author", userId);
-    }
-
-    private PaginationHelper<Article> getNewestArticlesByColumnValue(int page, int itemsPerPage, String columnName, int id) {
         try (CloseableSession session = HibernateHelper.getSession()) {
             CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
-            ParameterExpression<Integer> authorIdExpression = criteriaBuilder.parameter(Integer.class);
+            ParameterExpression<Category> categoryExpression = criteriaBuilder.parameter(Category.class);
             ParameterExpression<Boolean> visibleExpression = criteriaBuilder.parameter(Boolean.class);
 
             CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
@@ -103,11 +107,12 @@ public class ArticleDao extends DaoBase<Article> implements io.github.miroslavpo
             criteriaQuery.where(
                     criteriaBuilder.and(
                             criteriaBuilder.equal(from.get("visible"), visibleExpression),
-                            criteriaBuilder.equal(from.get(columnName), authorIdExpression)
+                            criteriaBuilder.equal(from.get("category"), categoryExpression)
                     )
             );
             Query<Article> query = session.delegate().createQuery(criteriaQuery);
-            query.setParameter(authorIdExpression, id);
+            query.setParameter(categoryExpression, categoryDao.loadById(categoryId));
+            query.setParameter(visibleExpression, true);
             query.setFirstResult((page - 1) * itemsPerPage);
             query.setMaxResults(itemsPerPage);
 
@@ -117,11 +122,54 @@ public class ArticleDao extends DaoBase<Article> implements io.github.miroslavpo
             totalCriteriaQuery.where(
                     criteriaBuilder.and(
                             criteriaBuilder.equal(fromTotal.get("visible"), visibleExpression),
-                            criteriaBuilder.equal(fromTotal.get(columnName), authorIdExpression)
+                            criteriaBuilder.equal(fromTotal.get("category"), categoryExpression)
                     )
             );
             Query<Long> totalQuery = session.delegate().createQuery(totalCriteriaQuery);
-            totalQuery.setParameter(authorIdExpression, id);
+            totalQuery.setParameter(categoryExpression, categoryDao.loadById(categoryId));
+            totalQuery.setParameter(visibleExpression, true);
+
+            return createPaginationHelper(page, itemsPerPage, query, totalQuery);
+        }
+    }
+
+    @Override
+    public PaginationHelper<Article> getNewestArticlesByUserId(int page, int itemsPerPage, int userId) {
+        try (CloseableSession session = HibernateHelper.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.delegate().getCriteriaBuilder();
+            ParameterExpression<User> authorExpression = criteriaBuilder.parameter(User.class);
+            ParameterExpression<Boolean> visibleExpression = criteriaBuilder.parameter(Boolean.class);
+
+            CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
+            Root<Article> from = criteriaQuery.from(Article.class);
+            criteriaQuery.orderBy(criteriaBuilder.desc(from.get("publishDate")));
+            from.fetch("author");
+            from.fetch("category");
+            from.fetch("gallery", JoinType.LEFT);
+            criteriaQuery.where(
+                    criteriaBuilder.and(
+                            criteriaBuilder.equal(from.get("visible"), visibleExpression),
+                            criteriaBuilder.equal(from.get("author"), authorExpression)
+                    )
+            );
+            Query<Article> query = session.delegate().createQuery(criteriaQuery);
+            query.setParameter(authorExpression, userDao.loadById(userId));
+            query.setParameter(visibleExpression, true);
+            query.setFirstResult((page - 1) * itemsPerPage);
+            query.setMaxResults(itemsPerPage);
+
+            CriteriaQuery<Long> totalCriteriaQuery = criteriaBuilder.createQuery(Long.class);
+            Root<Article> fromTotal = totalCriteriaQuery.from(Article.class);
+            totalCriteriaQuery.select(criteriaBuilder.count(fromTotal));
+            totalCriteriaQuery.where(
+                    criteriaBuilder.and(
+                            criteriaBuilder.equal(fromTotal.get("visible"), visibleExpression),
+                            criteriaBuilder.equal(fromTotal.get("author"), authorExpression)
+                    )
+            );
+            Query<Long> totalQuery = session.delegate().createQuery(totalCriteriaQuery);
+            totalQuery.setParameter(authorExpression, userDao.loadById(userId));
+            totalQuery.setParameter(visibleExpression, true);
 
             return createPaginationHelper(page, itemsPerPage, query, totalQuery);
         }
