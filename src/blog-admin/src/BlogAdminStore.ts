@@ -38,7 +38,7 @@ export class BlogAdminStore {
         State.loggedUser.role = loggedUser.role;
         State.loggedUser.nickname = loggedUser.nickname;
         State.loggedUser.tokenId = loggedUser.tokenId;
-        document.cookie = `tokenId=${loggedUser.tokenId}; expires=${new Date().addDays(10)}`;
+        document.cookie = `tokenId=${loggedUser.tokenId}; expires=${new Date().addDays(10)}; path=/`;
     }
 
     @action
@@ -48,7 +48,7 @@ export class BlogAdminStore {
         State.loggedUser.role = undefined;
         State.loggedUser.nickname = undefined;
         State.loggedUser.tokenId = undefined;
-        document.cookie = `tokenId= ; expires=${new Date(1970, 0, 0)}`;
+        document.cookie = `tokenId= ; expires=${new Date(1970, 0, 0)}; path=/`;
     }
 }
 

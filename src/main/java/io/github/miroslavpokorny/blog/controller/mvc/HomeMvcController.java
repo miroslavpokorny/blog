@@ -37,12 +37,12 @@ public class HomeMvcController {
     }
 
     @RequestMapping("/")
-    public String homePage(Model model, @CookieValue(value = "tokenId", required = false) String tokenId) {
-        return homePage(1, model, tokenId);
+    public String homePage(Model model) {
+        return homePage(1, model);
     }
 
     @RequestMapping("/{page}")
-    public String homePage(@PathVariable int page, Model model, @CookieValue(value = "tokenId", required = false) String tokenId) {
+    public String homePage(@PathVariable int page, Model model) {
         if (page < 1) {
             return "redirect:/";
         }
@@ -56,8 +56,6 @@ public class HomeMvcController {
         homeViewModel.setPage(page);
         homeViewModel.setLatestArticles(pages.getItems().stream().map(ModelToViewModelMapper::articleToArticleInfoViewModel).collect(Collectors.toList()));
         homeViewModel.setCategories(categories.stream().map(ModelToViewModelMapper::categoryToCategoryInfoViewModel).collect(Collectors.toList()));
-        homeViewModel.setAuthenticated(authentication.isAuthenticate(tokenId));
-        homeViewModel.setRole(authentication.isAuthenticate(tokenId) ? authentication.getAuthenticatedUser(tokenId).getUser().getRole().getId() : 0);
         model.addAttribute("viewModel", homeViewModel);
         return "home";
     }
