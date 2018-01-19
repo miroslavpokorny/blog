@@ -3,7 +3,10 @@ package io.github.miroslavpokorny.blog.mockDao;
 import io.github.miroslavpokorny.blog.model.User;
 import io.github.miroslavpokorny.blog.model.dao.UserDao;
 import io.github.miroslavpokorny.blog.model.dao.UserRoleDao;
+import io.github.miroslavpokorny.blog.model.error.EmailAlreadyExistsException;
+import io.github.miroslavpokorny.blog.model.error.NicknameAlreadyExistsException;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
@@ -75,6 +78,14 @@ public class MockUserDao implements UserDao {
 
     @Override
     public User create(User entity) {
+        User sameNickname = users.stream().filter(user -> user.getNickname().equals(entity.getNickname())).findFirst().orElse(null);
+        if (sameNickname != null) {
+            throw new ConstraintViolationException("User with this nickname already exist", null, "Nickname_UNIQUE");
+        }
+        User sameEmail = users.stream().filter(user -> user.getEmail().equals(entity.getEmail())).findFirst().orElse(null);
+        if (sameEmail != null) {
+            throw new ConstraintViolationException("User with this email already exist", null, "Email_UNIQUE");
+        }
         int maxId = users.stream().max(Comparator.comparingInt(User::getId)).orElseGet(() -> {
             User user = new User();
             user.setId(1);

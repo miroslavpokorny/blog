@@ -62,7 +62,7 @@ public class SignController extends BaseController{
             LoggedUserDto json = getLoggedUserJson(tokenId);
             return new ResponseEntity<>(json, HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.FORBIDDEN);
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping("/api/sign/up")

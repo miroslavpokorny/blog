@@ -3,11 +3,17 @@ package io.github.miroslavpokorny.blog.mockDao;
 import io.github.miroslavpokorny.blog.model.UserRole;
 import io.github.miroslavpokorny.blog.model.dao.UserRoleDao;
 import io.github.miroslavpokorny.blog.model.helper.PaginationHelper;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Primary
+@Repository
+@Profile("TEST")
 public class MockUserRoleDao implements UserRoleDao {
     private List<UserRole> userRoles = new ArrayList<>();
 
