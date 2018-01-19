@@ -9,6 +9,24 @@ import java.util.Date;
 @Entity
 @Table(name="User")
 public class User {
+    public User(String name, String surname, String email, String password, String nickname, Date lastSignInDate, UserRole role, boolean enabled, String avatar, String restorePasswordKey, String activationEmailKey, boolean activated) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.lastSignInDate = lastSignInDate;
+        this.role = role;
+        this.enabled = enabled;
+        this.avatar = avatar;
+        this.restorePasswordKey = restorePasswordKey;
+        this.activationEmailKey = activationEmailKey;
+        this.activated = activated;
+    }
+
+    public User() {
+    }
+
     @Id
     @GeneratedValue
     private int id;

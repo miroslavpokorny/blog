@@ -12,6 +12,15 @@ public class UserRole {
 
     private String description;
 
+    public UserRole(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public UserRole() {
+    }
+
     public int getId() {
         return id;
     }
