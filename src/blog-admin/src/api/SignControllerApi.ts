@@ -39,7 +39,7 @@ export function SignInAction(email: string, password: string, callback: (error?:
             if (result === undefined) {
                 return callback("Server return corrupted data!");
             }
-            setLoggedUserState(result);
+            State.setLoggedUserState(result);
             return callback();
         },
         data
@@ -51,7 +51,7 @@ export function SignOutAction(callback: (error?: string | object) => void) {
         if (error !== undefined) {
             return callback(error);
         }
-        resetLoggedUserState();
+        State.resetLoggedUserState();
         return callback();
     });
 }
@@ -62,7 +62,7 @@ export function GetLoggedUserAction(callback: (error?: string | object) => void)
             return callback(error);
         }
         if (result !== undefined) {
-            setLoggedUserState(result);
+            State.setLoggedUserState(result);
         }
         return callback();
     });
@@ -90,28 +90,10 @@ export function SignUpAction(
                 return callback(error);
             }
             if (result !== undefined) {
-                setLoggedUserState(result);
+                State.setLoggedUserState(result);
             }
             return callback();
         },
         data
     );
-}
-
-function setLoggedUserState(loggedUser: LoggedUser) {
-    State.loggedUser.id = loggedUser.id;
-    State.loggedUser.lastSignInDate = loggedUser.lastSignInDate;
-    State.loggedUser.role = loggedUser.role;
-    State.loggedUser.nickname = loggedUser.nickname;
-    State.loggedUser.tokenId = loggedUser.tokenId;
-    document.cookie = `tokenId=${loggedUser.tokenId}; expires=${new Date().addDays(10)}`;
-}
-
-function resetLoggedUserState() {
-    State.loggedUser.id = undefined;
-    State.loggedUser.lastSignInDate = undefined;
-    State.loggedUser.role = undefined;
-    State.loggedUser.nickname = undefined;
-    State.loggedUser.tokenId = undefined;
-    document.cookie = `tokenId= ; expires=${new Date(1970, 0, 0)}`;
 }

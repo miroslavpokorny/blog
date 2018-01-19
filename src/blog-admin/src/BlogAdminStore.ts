@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 import { LoggedUser } from "./api/SignControllerApi";
 
 export interface MainNavigation {
@@ -30,6 +30,26 @@ export class BlogAdminStore {
         nickname: undefined,
         tokenId: undefined
     };
+
+    @action
+    public setLoggedUserState(loggedUser: LoggedUser) {
+        State.loggedUser.id = loggedUser.id;
+        State.loggedUser.lastSignInDate = loggedUser.lastSignInDate;
+        State.loggedUser.role = loggedUser.role;
+        State.loggedUser.nickname = loggedUser.nickname;
+        State.loggedUser.tokenId = loggedUser.tokenId;
+        document.cookie = `tokenId=${loggedUser.tokenId}; expires=${new Date().addDays(10)}`;
+    }
+
+    @action
+    public resetLoggedUserState() {
+        State.loggedUser.id = undefined;
+        State.loggedUser.lastSignInDate = undefined;
+        State.loggedUser.role = undefined;
+        State.loggedUser.nickname = undefined;
+        State.loggedUser.tokenId = undefined;
+        document.cookie = `tokenId= ; expires=${new Date(1970, 0, 0)}`;
+    }
 }
 
 export const State = new BlogAdminStore();

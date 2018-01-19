@@ -81,8 +81,6 @@ class MainNavigation extends React.Component<MainNavigationProps> {
                         <NavDropdown title="Profile" id="basic-nav-dropdown">
                             <MenuItem eventKey={RouteName.profile}>Profile</MenuItem>
                             <MenuItem eventKey={RouteName.profileEdit}>Edit profile</MenuItem>
-                            {/* <MenuItem eventKey={RouteName.profileUploadAvatar}>Upload avatar</MenuItem>
-                        <MenuItem eventKey={RouteName.profileChangePassword}>Change password</MenuItem> */}
                         </NavDropdown>
                     )}
                     {this.canDisplay(UserRole.Editor) && (
@@ -113,6 +111,7 @@ class MainNavigation extends React.Component<MainNavigationProps> {
                                 SignOutAction(error => {
                                     if (error) {
                                         this.setState({ signingOut: false });
+                                        return;
                                     }
                                     State.mainNavigation.redirectLink = RouteName.signIn;
                                 });
