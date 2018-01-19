@@ -150,7 +150,8 @@ export default class GalleryItemPage extends React.Component<PageProps> {
                                                     onClick={() => {
                                                         this.setState({
                                                             selectedGalleryItemId: item.id,
-                                                            selectedGalleryItemTitle: item.title,
+                                                            selectedGalleryItemTitle:
+                                                                item.title !== null ? item.title : "",
                                                             selectedGalleryItemImageName: item.imageName
                                                         });
                                                         this.setState({ showModalEdit: true });
