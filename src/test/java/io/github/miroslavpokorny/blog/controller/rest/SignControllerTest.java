@@ -3,6 +3,7 @@ package io.github.miroslavpokorny.blog.controller.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.miroslavpokorny.blog.model.dto.ErrorMessageDto;
 import io.github.miroslavpokorny.blog.model.dto.LoggedUserDto;
+import io.github.miroslavpokorny.blog.testutil.TokenTestHelper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,24 +67,11 @@ public class SignControllerTest {
         Assert.assertTrue(loggedUser.getTokenId().length() > 0);
     }
 
-    private String getSignedAdministratorTokenId() throws Exception {
-        MvcResult result = mvc.perform(post("/api/sign/in")
-                .content("{\"email\":\"frantanovak@example.com\",\"password\":\"abc\"}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        String textJson = result.getResponse().getContentAsString();
-        LoggedUserDto loggedUser = mapper.readValue(textJson, LoggedUserDto.class);
-        Assert.assertEquals("frantanovak", loggedUser.getNickname());
-        Assert.assertEquals(1, loggedUser.getId());
-        Assert.assertEquals(4, loggedUser.getRole());
-        Assert.assertTrue(loggedUser.getTokenId().length() > 0);
-        return loggedUser.getTokenId();
-    }
+
 
     @Test
     public void signOutUserTest() throws Exception {
-        String tokenId = getSignedAdministratorTokenId();
+        String tokenId = TokenTestHelper.getSignedAdministratorTokenId(mvc);
         mvc.perform(post("/api/sign/out")
                 .param("tokenId", tokenId)
         ).andExpect(status().isOk());
@@ -101,7 +89,7 @@ public class SignControllerTest {
 
     @Test
     public void getLoggedUser() throws Exception {
-        String tokenId = getSignedAdministratorTokenId();
+        String tokenId = TokenTestHelper.getSignedAdministratorTokenId(mvc);
         MvcResult result = mvc.perform(post("/api/getLoggedUser")
                 .param("tokenId", tokenId)
         ).andExpect(status().isOk()).andReturn();
