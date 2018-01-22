@@ -25,7 +25,7 @@
                     <h2 th:text="${article.name}">Article Name</h2>
                 </a>
                 <p>Published by: <span th:text="${article.author}"></span> on <span th:text="${article.publishDate}"></span></p>
-                <img class="preview-image" th:alt="'Preview image '+${article.previewImage}" th:src="@{'images/'+${article.previewImage}}"/>
+                <img class="preview-image" th:alt="'Preview image '+${article.previewImage}" th:src="@{'/images/'+${article.previewImage}}"/>
                 <p th:text="${article.contentPreview}">
                     Bacon ipsum dolor amet ham brisket leberkas boudin ball tip short loin meatball cow filet mignon alcatra. Brisket prosciutto biltong beef ham tri-tip. Tongue burgdoggen shoulder hamburger brisket cupim beef filet mignon short ribs rump. Corned beef tri-tip beef fatback frankfurter, buffalo ball tip brisket pork belly short loin. Beef pastrami short loin pork chop, hamburger strip steak brisket doner ribeye leberkas short ribs sausage buffalo jerky. Fatback shank spare ribs, doner pork loin burgdoggen hamburger bresaola swine. Jerky flank bacon frankfurter chicken pig pork belly strip steak chuck landjaeger rump pastrami kevin.
                 </p>
